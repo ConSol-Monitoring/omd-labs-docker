@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
-EXPOSE 80 22 4730 566
+EXPOSE 80 22 4730 5666
 
 RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
     gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
