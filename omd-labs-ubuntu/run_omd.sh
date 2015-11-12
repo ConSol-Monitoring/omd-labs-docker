@@ -2,4 +2,4 @@
 
 service apache2 start
 omd start
-/bin/bash
+while true; do sleep 100000000; done
