@@ -17,9 +17,9 @@ build:
 	docker build -t $(IMAGE) .
 	docker images | grep '$(REPO)'
 start:
-	docker run -p 8888:80 -d -it $(IMAGE)
+	docker run -p 8080:80 -d $(IMAGE)
 	docker images | grep '$(REPO)'
 echo:
 	echo $(IMAGE)
 bash:
-	docker run --rm -p 8888:80 -it $(IMAGE) /bin/bash
+	docker run --rm -p 8080:80 -it $(IMAGE) /bin/bash
