@@ -1,4 +1,4 @@
-# This file is used to manage local containers
+# This file is used to manage local images
 # depending of the current dir and branch.
 # Branch 'master' leads to no tag (=latest),
 # others to "local/[dirname]:[branchname]
