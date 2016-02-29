@@ -2,7 +2,7 @@ FROM ubuntu:latest
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 22 4730 5666
 
-ENV REFRESHED 2015-11-16
+ENV REFRESHED 20160229
 
 RUN  echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf; \ 
     echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf; \ 
