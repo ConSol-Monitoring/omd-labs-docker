@@ -6,7 +6,7 @@
 # run 'make echo' to show the image name you're working on.
 
 REPO = local/$(shell basename `pwd`)
-TAG  = $(shell git rev-parse --abbrev-ref HEAD|grep -v master)
+TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/latest/')
 
 IMAGE=$(REPO):$(TAG)
 
@@ -17,9 +17,9 @@ build:
 	docker build -t $(IMAGE) .
 	docker images | grep '$(REPO)'
 start:
-	docker run -p 8080:80 -d $(IMAGE)
+	docker run -p 8443:443 -d $(IMAGE)
 	docker images | grep '$(REPO)'
 echo:
 	echo $(IMAGE)
 bash:
-	docker run --rm -p 8080:80 -it $(IMAGE) /bin/bash
+	docker run --rm -p 8443:443 -it $(IMAGE) /bin/bash
