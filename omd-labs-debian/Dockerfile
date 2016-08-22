@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM debian:8
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
@@ -9,9 +9,9 @@ RUN  echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disab
     echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf; \
     cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
-RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
+RUN export DEBIAN_FRONTEND=noninteractive && gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && \
     gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
-    echo "deb http://labs.consol.de/repo/testing/ubuntu $(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d'=' -f2) main" >> /etc/apt/sources.list && \
+    echo "deb http://labs.consol.de/repo/testing/debian $(cat /etc/os-release  | grep 'VERSION=' | tr '(' ')' | cut -d ')' -f2) main" > /etc/apt/sources.list.d/labs-consol-testing.list && \
     apt-get update && \
     apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 omd-labs-edition-daily &&  \
     apt-get clean

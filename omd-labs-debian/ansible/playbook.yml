@@ -1,0 +1,31 @@
+---
+
+# - name: foo
+#   hosts: all
+#   tasks:
+#     # - debug: msg="foo"
+#     - stat: path="{{ playbook_dir }}/{{ ANSIBLE_DROPIN_ROLE }}"
+#       register: adp
+#     - debug: msg="Ansible dropin-role dir is {{ playbook_dir }}/{{ANSIBLE_DROPIN_ROLE}}"
+#     - debug: msg="{{adp}}"
+
+- name: execute ansible drop-in role
+  hosts: all
+  vars:
+    - dropin_role: "{{ lookup('env','ANSIBLE_DROPIN_ROLE') }}"
+  roles:
+    - "{{ dropin_role }}"
+
+- name: start OMD site "demo"
+  hosts: all
+  tasks:
+    - command: omd start demo
+      register: site_started
+
+
+
+- name: Start Apache web server
+  hosts: all
+  tasks:
+    - command: /usr/sbin/apache2ctl -D FOREGROUND -k start
+      when: site_started.rc == 0
