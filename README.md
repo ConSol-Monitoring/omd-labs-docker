@@ -15,7 +15,7 @@ Run a bare installation of OMD Labs Edition:
 
 ## Ansible drop-ins
 ### Image, image, image, ... 
-So, you want to test something specific in OMD and configure the site to your needs? Normally you would create a Dockerfile using the OMD labs orginal image (``FROM: ...``), and write an more or less lousy Shell script for the ``CMD/ENTRYPOINT`` to install software and do the configuration stuff. Of course, you will get a new image - all because of a handful of changes. 
+So, you want to test something specific in OMD and configure the site to your needs? Normally you would create a Dockerfile using the OMD labs orginal image (``FROM: ...``), and write an more or less clean Shell script for the ``CMD/ENTRYPOINT`` to install software and do the configuration stuff. Of course, you will get a new image - all because of a handful of changes. 
 
 ### Image, Ansible, Ansible, Ansible... 
 

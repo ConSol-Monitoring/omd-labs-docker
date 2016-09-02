@@ -2,21 +2,16 @@ FROM centos:7
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20160822
+ENV REFRESHED 20160902
 
-RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testing.rhel7.noarch.rpm" && \
-    rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
+RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
     yum clean all && \
     yum -y update && \
-    yum -y install which lsof vim git openssh-server tree omd-labs-edition-daily
+    yum -y install which lsof vim git openssh-server tree
 
-
-
-
-
-
-
-
+RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testing.rhel7.noarch.rpm" && \
+    yum -y update && \
+    yum -y install omd-labs-edition-daily
 
 # OMD site creation
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
