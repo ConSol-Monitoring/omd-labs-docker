@@ -8,7 +8,7 @@ Run a bare installation of OMD Labs Edition:
 
     # centos 7
     docker run -p 8443:443 consol/omd-labs-centos
-    # Ubuntu 14.04
+    # Ubuntu 16.04
     docker run -p 8443:443 consol/omd-labs-ubuntu
     # Debian 8
     docker run -p 8443:443 consol/omd-labs-debian
@@ -40,9 +40,3 @@ If you want to see more output from Ansible to debug the role:
 
 The container can still be started without any drop-in mount, of course. In that case Ansible will only start the OMD site "demo" and the global Apache web server. 
 
-
-Have a look at the [**Sakuli project**](https://github.com/Consol/sakuli) OMD-drop-in rule, which
-
-* creates examples Nagios objects (hosts/services/commands)
-* installs the graph template
-* configures mod-gearman to receive Sakuli events
