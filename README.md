@@ -1,6 +1,6 @@
 # docker-omd-labs
 
-Run OMD Labs (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
+OMD Labs (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
 
 ## Usage
 

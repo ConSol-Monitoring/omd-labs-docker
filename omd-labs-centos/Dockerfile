@@ -32,5 +32,3 @@ COPY ansible /root/ansible
 
 WORKDIR /root
 CMD /omd/sites/demo/bin/ansible-playbook -i localhost, /root/ansible/playbook.yml -c local -e ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE $ANSIBLE_VERBOSITY
-
-#CMD ["/bin/bash", "/omd/sites/demo/bin/ansible-playbook", "-i", "localhost,", "/root/ansible/playbook.yml", "-c", "local", "-e", "ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE", "$ANSIBLE_VERBOSITY" ]
