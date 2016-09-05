@@ -2,7 +2,7 @@ FROM centos:7
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20160902
+ENV REFRESHED 20160903
 
 RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
     yum clean all && \
@@ -31,4 +31,6 @@ ENV ANSIBLE_VERBOSITY=
 COPY ansible /root/ansible
 
 WORKDIR /root
-CMD /omd/sites/demo/bin/ansible-playbook -i localhost, ansible/playbook.yml -c local -e ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE $ANSIBLE_VERBOSITY
+CMD /omd/sites/demo/bin/ansible-playbook -i localhost, /root/ansible/playbook.yml -c local -e ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE $ANSIBLE_VERBOSITY
+
+#CMD ["/bin/bash", "/omd/sites/demo/bin/ansible-playbook", "-i", "localhost,", "/root/ansible/playbook.yml", "-c", "local", "-e", "ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE", "$ANSIBLE_VERBOSITY" ]
