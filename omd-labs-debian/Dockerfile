@@ -37,7 +37,8 @@ ENV ANSIBLE_CONFIG=/root/ansible/ansible.cfg
 ENV ANSIBLE_DROPIN_ROLE=dropin_role
 ENV ANSIBLE_VERBOSITY=
 
+ENV REFRESHED 20160912
 COPY ansible /root/ansible
 
 WORKDIR /root
-CMD /omd/sites/demo/bin/ansible-playbook -i localhost, /root/ansible/playbook.yml -c local -e ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE $ANSIBLE_VERBOSITY
+CMD /root/ansible/playbook_starter.sh

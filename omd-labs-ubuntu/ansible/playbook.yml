@@ -13,8 +13,6 @@
     - command: omd start demo
       register: site_started
 
-- name: Start Apache web server
-  hosts: all
-  tasks:
-    - command: /usr/sbin/apache2ctl -D FOREGROUND -k start
-      when: site_started.rc == 0
+
+
+## Web server is started by playbook_starter.sh when ansible-playbook has ended.

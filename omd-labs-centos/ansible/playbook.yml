@@ -1,20 +1,10 @@
 ---
 
-# - name: foo
-#   hosts: all
-#   tasks:
-#     # - debug: msg="foo"
-#     - stat: path="{{ playbook_dir }}/{{ ANSIBLE_DROPIN_ROLE }}"
-#       register: adp
-#     - debug: msg="Ansible dropin-role dir is {{ playbook_dir }}/{{ANSIBLE_DROPIN_ROLE}}"
-#     - debug: msg="{{adp}}"
-
 - name: execute ansible drop-in role
   hosts: all
   vars:
     - dropin_role: "{{ lookup('env','ANSIBLE_DROPIN_ROLE') }}"
   roles:
-    # - { role: "{{ dropin_role }}", when: "{{ adp.stat.isdir is defined and adp.stat.isdir }}" }
     - "{{ dropin_role }}"
 
 - name: start OMD site "demo"
@@ -24,9 +14,4 @@
       register: site_started
 
 
-
-- name: Start Apache web server
-  hosts: all
-  tasks:
-    - command: /usr/sbin/apachectl -D FOREGROUND -k start
-      when: site_started.rc == 0
+## Web server is started by playbook_starter.sh when ansible-playbook has ended.
