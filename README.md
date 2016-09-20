@@ -1,4 +1,4 @@
-# docker-omd-labs
+# omd-labs-docker
 
 OMD Labs (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
 
@@ -38,5 +38,4 @@ If you want to see more output from Ansible to debug the role:
 
     docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v ~/path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
 
-The container can still be started without any drop-in mount, of course. In that case Ansible will only start the OMD site "demo" and the global Apache web server. 
-
+The container can still be started without any drop-in mount, of course. In that case Ansible will only start the OMD site "demo" and the global Apache web server.
