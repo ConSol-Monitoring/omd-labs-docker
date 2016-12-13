@@ -1,17 +1,36 @@
 # omd-labs-docker
 
-OMD Labs (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
+OMD Labs Nightly (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
+
+Author: Simon Meggle, *simon.meggle at consol.de*
+
+## Automated builds
+
+Each image build gets triggered by the OMD Labs build system as soon as there are new packages available:
+
+* https://hub.docker.com/r/consol/omd-labs-centos/
+* https://hub.docker.com/r/consol/omd-labs-debian/
+* https://hub.docker.com/r/consol/omd-labs-ubuntu/
 
 ## Usage
 
 Run a bare installation of OMD Labs Edition:
 
-    # centos 7
+    # Centos 7
     docker run -p 8443:443 consol/omd-labs-centos
     # Ubuntu 16.04
     docker run -p 8443:443 consol/omd-labs-ubuntu
     # Debian 8
     docker run -p 8443:443 consol/omd-labs-debian
+
+Alternatively, you can use the Makefile for common operations:
+
+    # same as 'docker run' above
+    make start
+    # build a "local/" image without overwriting the consol/ image
+    make build
+    # start just the bash
+    make bash
 
 ## Ansible drop-ins
 ### Image, image, image, ...
@@ -19,23 +38,23 @@ So, you want to test something specific in OMD and configure the site to your ne
 
 ### Image, Ansible, Ansible, Ansible...
 
-For some time OMD comes with **full Ansible support**, which we can use to modify the container instance *on startup*. **How does this work?**
+#### Startup order
+For some time OMD-Labs comes with **full Ansible support**, which we can use to modify the container instance *on startup*. **How does this work?**
 
-The Dockerfiles of each image define an Ansible playbook run as ``CMD``:
+By default, the OMD-labs containers start with the CMD `/root/start.sh`. This script
 
-    CMD /omd/sites/demo/bin/ansible-playbook -i localhost, ansible/playbook.yml -c local -e ANSIBLE_DROPIN_ROLE=$ANSIBLE_DROPIN_ROLE $ANSIBLE_VERBOSITY
+* checks if there are any files in `/root/ansible_omd/dropin_role`. If so, it starts it by calling the playbook `/root/ansible_omd/playbook.yml`.
+* starts the OMD site "demo"
+* starts Apache as a foreground process to let the container stay alive
 
-The ``-i localhost,`` (watch the comma) looks weird, but allows us to execute the playbook on the local host without defining an inventory. ``-c local`` avoids needless SSH to localhost.
+##### Include own drop-in roles
 
-``ANSIBLE_DROPIN_ROLE`` is a variable defined few lines before and points to a role directory within the ansible playbook folder. It is empty by default and so Ansible will skip this task if you are starting the container as shown in "Usage".
+To use your own drop-in role, just **mount a Ansible role folder** on the host to the drop-in folder within the container:
 
+    docker run -it -p 8443:443 -v path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
 
-You can now **mount a drop-in custom Ansible role**, which is executed first at the container startup:
+#### Debugging
 
-    docker run -it -p 8443:443 -v ~/path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
+If you want to see more verbose output from Ansible to debug your role, add the environment variable `ANSIBLE_VERBOSITY`:
 
-If you want to see more output from Ansible to debug the role:
-
-    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v ~/path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
-
-The container can still be started without any drop-in mount, of course. In that case Ansible will only start the OMD site "demo" and the global Apache web server.
+    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
