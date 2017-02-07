@@ -6,15 +6,19 @@ Author: Simon Meggle, *simon.meggle at consol.de*
 
 ## Automated builds
 
-Each image build gets triggered by the OMD Labs build system as soon as there are new packages available:
+Each image build gets triggered by the OMD Labs build system as soon as there are new packages of OMD available:
 
 * https://hub.docker.com/r/consol/omd-labs-centos/
 * https://hub.docker.com/r/consol/omd-labs-debian/
 * https://hub.docker.com/r/consol/omd-labs-ubuntu/
 
+The image already contains a "demo" site.
+
 ## Usage
 
-Run a bare installation of OMD Labs Edition:
+### run the "demo" site
+
+Run the "demo" site in OMD Labs Edition:
 
     # Centos 7
     docker run -p 8443:443 consol/omd-labs-centos
@@ -23,18 +27,29 @@ Run a bare installation of OMD Labs Edition:
     # Debian 8
     docker run -p 8443:443 consol/omd-labs-debian
 
-Alternatively, you can use the Makefile for common operations:
+Use the Makefile to work with *locally built* images:
 
-    # same as 'docker run' above
+    # run a local image
     make start
     # build a "local/" image without overwriting the consol/ image
     make build
     # start just the bash
     make bash
 
+### run a custom site
+
+If you want to create a custom site, you have to build an own image:
+
+* clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-centos`
+* build a local image:
+      SITENAME=mynewsite
+      make build    
+* run the image:
+      docker run -p 8443:443 local/omd-labs-centos
+
 ## Ansible drop-ins
 ### Image, image, image, ...
-So, you want to test something specific in OMD and configure the site to your needs? Normally you would create a Dockerfile using the OMD labs orginal image (``FROM: ...``), and write an more or less clean Shell script for the ``CMD/ENTRYPOINT`` to install software and do the configuration stuff. Of course, you will get a new image - all because of a handful of changes.
+So you want to test something specific in OMD and configure the site to your needs? Normally you would create a Dockerfile using the OMD labs orginal image (``FROM: ...``), and write an more or less clean Shell script for the ``CMD/ENTRYPOINT`` to install software and do the configuration stuff. Of course, you will get a new image - all because of a handful of changes.
 
 ### Image, Ansible, Ansible, Ansible...
 

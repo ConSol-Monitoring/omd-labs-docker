@@ -10,16 +10,18 @@ TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/latest/')
 
 IMAGE=$(REPO):$(TAG)
 
+ifdef SITENAME
+	BUILDARGS = --build-arg SITENAME=$(SITENAME)
+endif
 
-.PHONY: build bash start stop
+.PHONY: build bash start echo
 
 build:
-	docker build -t $(IMAGE) .
+	docker build -t $(IMAGE) $(BUILDARGS) .
 	docker images | grep '$(REPO)'
 start:
 	docker run -p 8443:443 -d $(IMAGE)
-	docker images | grep '$(REPO)'
 echo:
-	echo $(IMAGE)
+	@echo $(IMAGE)
 bash:
 	docker run --rm -p 8443:443 -it $(IMAGE) /bin/bash

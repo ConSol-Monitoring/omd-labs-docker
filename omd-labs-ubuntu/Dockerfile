@@ -3,6 +3,7 @@ MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20161207
+ARG SITENAME=demo
 
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -25,15 +26,15 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # -- OMD site creation
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
-RUN omd create demo || true
-RUN omd config demo set APACHE_TCP_ADDR 0.0.0.0
+RUN omd create $SITENAME || true
+RUN omd config $SITENAME set APACHE_TCP_ADDR 0.0.0.0
 RUN echo 'root:root' | chpasswd
-RUN echo 'demo:demo' | chpasswd
-ENV OMD_DEMO /opt/omd/sites/demo
+RUN echo "$SITENAME:$SITENAME" | chpasswd
+ENV OMD_DEMO /opt/omd/sites/$SITENAME
 
 # -- prepare OMD start by Ansible
 COPY ansible_omd /root/ansible_omd
-ENV PYTHONPATH=/omd/sites/demo/lib/python:/omd/sites/demo/local/lib/python
+ENV PYTHONPATH=/omd/versions/default/lib/python/
 ENV ANSIBLE_CONFIG=/root/ansible_omd/ansible.cfg
 # dropin-role dir must be mounted as volume into /root/ansible_omd (=playbook_dir)
 # e.g. -v $(pwd)/somewhere/on/host:/root/ansible_omd/dropin_role
