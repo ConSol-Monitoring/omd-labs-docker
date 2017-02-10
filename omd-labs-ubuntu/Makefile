@@ -18,7 +18,7 @@ endif
 
 build:
 	docker build -t $(IMAGE) $(BUILDARGS) .
-	docker images | grep '$(REPO)'
+	@echo "Successfully built" $(IMAGE)
 start:
 	docker run -p 8443:443 -d $(IMAGE)
 echo:

@@ -4,7 +4,13 @@ EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20161207
 ARG SITENAME=demo
+ARG ANSIBLE_DROPIN=/root/ansible_dropin
 
+ENV SITENAME=$SITENAME
+ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
+ENV PYTHONPATH=/omd/versions/default/lib/python/
+ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
+ENV ANSIBLE_VERBOSITY=
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -30,16 +36,7 @@ RUN omd create $SITENAME || true
 RUN omd config $SITENAME set APACHE_TCP_ADDR 0.0.0.0
 RUN echo 'root:root' | chpasswd
 RUN echo "$SITENAME:$SITENAME" | chpasswd
-ENV OMD_DEMO /opt/omd/sites/$SITENAME
 
-# -- prepare OMD start by Ansible
-COPY ansible_omd /root/ansible_omd
-ENV PYTHONPATH=/omd/versions/default/lib/python/
-ENV ANSIBLE_CONFIG=/root/ansible_omd/ansible.cfg
-# dropin-role dir must be mounted as volume into /root/ansible_omd (=playbook_dir)
-# e.g. -v $(pwd)/somewhere/on/host:/root/ansible_omd/dropin_role
-ENV ANSIBLE_DROPIN_ROLE=dropin_role
-ENV ANSIBLE_VERBOSITY=
 
 WORKDIR /root
 ADD start.sh /root/

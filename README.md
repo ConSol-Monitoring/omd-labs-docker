@@ -48,28 +48,23 @@ If you want to create a custom site, you have to build an own image:
       docker run -p 8443:443 local/omd-labs-centos
 
 ## Ansible drop-ins
-### Image, image, image, ...
-So you want to test something specific in OMD and configure the site to your needs? Normally you would create a Dockerfile using the OMD labs orginal image (``FROM: ...``), and write an more or less clean Shell script for the ``CMD/ENTRYPOINT`` to install software and do the configuration stuff. Of course, you will get a new image - all because of a handful of changes.
 
-### Image, Ansible, Ansible, Ansible...
-
-#### Startup order
 For some time OMD-Labs comes with **full Ansible support**, which we can use to modify the container instance *on startup*. **How does this work?**
 
+### start sequence
 By default, the OMD-labs containers start with the CMD `/root/start.sh`. This script
 
-* checks if there are any files in `/root/ansible_omd/dropin_role`. If so, it starts it by calling the playbook `/root/ansible_omd/playbook.yml`.
-* starts the OMD site "demo"
-* starts Apache as a foreground process to let the container stay alive
+* checks if there is a `playbook.yml` in `$ANSIBLE_DROPIN` (default: `/root/ansible_dropin`, changeable by environemt). If found, the playbook is executed. It is completely up to you if you only place one single task in `playbook.yml`, or if you also include Ansible roles. (with a certain point of complexity, you should think about a separate image, though...)
+* starts the OMD site "demo" & Apache as a foreground process
 
-##### Include own drop-in roles
+### Include Ansible drop-ins
 
-To use your own drop-in role, just **mount a Ansible role folder** on the host to the drop-in folder within the container:
+Just a folder containing a valid playbook into the container:
 
-    docker run -it -p 8443:443 -v path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
+    docker run -it -p 8443:443 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
 
-#### Debugging
+### Debugging
 
 If you want to see more verbose output from Ansible to debug your role, add the environment variable `ANSIBLE_VERBOSITY`:
 
-    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v path/to/ansible/role/on/host:/root/ansible/dropin_role consol/omd-labs-debian
+    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian

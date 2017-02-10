@@ -1,8 +1,0 @@
----
-
-- name: execute ansible drop-in role
-  hosts: all
-  vars:
-    - dropin_role: "{{ lookup('env','ANSIBLE_DROPIN_ROLE') }}"
-  roles:
-    - "{{ dropin_role }}"
