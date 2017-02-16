@@ -26,9 +26,21 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
 RUN omd create $SITENAME || true
 RUN omd config $SITENAME set APACHE_TCP_ADDR 0.0.0.0
+
+# PERSISTENT VOLUMES
+# Dynamic OMD data folders (etc, local, var) are renamed to .ORIG.
+# On run time the start script (start.sh) will check if any of this folders is mounted from the host
+# - if not => no data container mounts
+#   -> remove symlinks
+#   -> move .ORIG paths to the original location
+# - if data container mount points
+#   -> nothing to do, use the mounts.
+RUN mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
+    mv /omd/sites/$SITENAME/etc /omd/sites/$SITENAME/etc.ORIG && \
+    mv /omd/sites/$SITENAME/var /omd/sites/$SITENAME/var.ORIG
+
 RUN echo "root" | passwd --stdin root
 RUN echo "$SITENAME" | passwd --stdin $SITENAME
-
 
 WORKDIR /root
 ADD start.sh /root/

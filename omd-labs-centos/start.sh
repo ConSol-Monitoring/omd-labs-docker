@@ -1,17 +1,40 @@
 #!/bin/bash
 
+echo "Data volume check..."
+echo "--------------------------------------"
+for dir in "local" "etc" "var"; do
+  datadir="/opt/omd/sites/$SITENAME/$dir"
+  if mount | grep -q "$datadir"; then
+    # folder is mounted from volume
+    echo " * [EXTERNAL] $datadir"
+    chown -R $SITENAME:$SITENAME $datadir
+  else
+    # no volume mounts, move ORIG folder back to its default location
+    mv $datadir{.ORIG,}
+    echo " * [LOCAL]    $datadir"
+  fi
+done
+
+echo
+
+echo "Checking for Ansible drop-in..."
+echo "--------------------------------------"
 if [ -r $ANSIBLE_DROPIN/playbook.yml ]; then
-  echo "omd-labs: Executing Ansible drop-in..."
-  echo "--------------------------------------"
+  echo "Executing Ansible drop-in..."
   /omd/versions/default/bin/ansible-playbook -i localhost, $ANSIBLE_DROPIN/playbook.yml -c local $ANSIBLE_VERBOSITY -e SITENAME=$SITENAME
 else
-  echo "No Ansible drop-in defined, nothing to do."
+  echo "Nothing to do ($ANSIBLE_DROPIN/playbook.yml not found)."
 fi
+
+echo
 
 echo "omd-labs: Starting site $SITENAME..."
 echo "--------------------------------------"
 omd start $SITENAME
-echo "--------------------------------------"
+
+echo
 
 echo "omd-labs: Starting Apache web server..."
+echo "--------------------------------------"
+
 exec /usr/sbin/httpd -D FOREGROUND
