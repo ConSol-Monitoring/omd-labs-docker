@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
 echo "Data volume check..."
 echo "--------------------------------------"
@@ -37,4 +39,6 @@ echo
 echo "omd-labs: Starting Apache web server..."
 echo "--------------------------------------"
 
-exec /usr/sbin/httpd -D FOREGROUND
+/usr/sbin/httpd
+
+while true; do sleep 10; done
