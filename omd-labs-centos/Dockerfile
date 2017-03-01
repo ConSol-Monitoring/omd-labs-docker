@@ -14,14 +14,9 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
     yum -y install omd-labs-edition-daily
 
 #### user environment
-ENV HOME=/omd/sites
-ENV INST_SCRIPTS=/root/install
-ADD ./usermod/install $INST_SCRIPTS
-RUN find $INST_SCRIPTS -name '*.sh' -exec chmod a+x {} +
-
-RUN $INST_SCRIPTS/libnss_wrapper.sh
-ENV STARTUPDIR /docker-startup
-ADD ./usermod/startup $STARTUPDIR
+ENV HOME=/root
+WORKDIR $HOME
+ADD ./start.sh $HOME
 
 #### ansible
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
@@ -30,13 +25,11 @@ ENV PYTHONPATH=/omd/versions/default/lib/python/
 ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
 ENV ANSIBLE_VERBOSITY=
 
-# -- OMD site creation
-#TODO: maybe work wiht ONBUILD instructions for later images also?
+# -- OMD site creation (DEMO)
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
-ONBUILD RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
-RUN omd create $SITENAME || true
-RUN omd config $SITENAME set APACHE_TCP_ADDR 0.0.0.0
+RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
+RUN omd create -u 1000 -g 1000 $SITENAME || true
 
 # PERSISTENT VOLUMES
 # Dynamic OMD data folders (etc, local, var) are renamed to .ORIG.
@@ -50,9 +43,18 @@ RUN mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
     mv /omd/sites/$SITENAME/etc /omd/sites/$SITENAME/etc.ORIG && \
     mv /omd/sites/$SITENAME/var /omd/sites/$SITENAME/var.ORIG
 
-WORKDIR $HOME
-RUN $INST_SCRIPTS/set_user_permission.sh $STARTUPDIR $HOME
+# -- ONBUILD
+# when used as a base image, create another site if SITENAME was set to something else
+#ONBUILD RUN [ "$SITENAME" != "demo" ] && echo "anderer als $SITENAME"
+#ONBUILD RUN if [ "$SITENAME" == "demo" ]; then echo "gleich $SITENAME"; fi
+#ONBUILD RUN if [ "$SITENAME" != "demo" ]; then echo "ungleich $SITENAME"; fi
 
-USER 1000
 
-CMD $STARTUPDIR/start.sh
+#ONBUILD RUN if [ "$SITENAME" != "demo" ]; then omd create -u 1001 -g 1001 $SITENAME || true; fi
+ONBUILD RUN [ "$SITENAME" != "demo" ] && omd create -u 1001 -g 1001 $SITENAME || true
+
+ONBUILD RUN [ "$SITENAME" != "demo" ] && mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
+    mv /omd/sites/$SITENAME/etc /omd/sites/$SITENAME/etc.ORIG && \
+    mv /omd/sites/$SITENAME/var /omd/sites/$SITENAME/var.ORIG || true
+
+CMD ./start.sh
