@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+if [ -n "$NEW_SITENAME" ] ; then
+    echo "use NEW_SITENAME: $NEW_SITENAME"
+    export SITENAME="$NEW_SITENAME"
+fi
+
+echo "Config and start OMD site: $SITENAME"
+echo "--------------------------------------"
 
 trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
@@ -9,6 +16,12 @@ for dir in "local" "etc" "var"; do
   if mount | grep -q "$datadir"; then
     # folder is mounted from volume
     echo " * [EXTERNAL] $datadir"
+    if [ ! "$(ls -A $datadir)" ]; then
+        # Populate etc/ directory
+        echo " * [EXTERNAL] $datadir is empty -> initialize it"
+        echo "--------------------------------------"
+        rsync -av $datadir.ORIG/ $datadir/
+    fi
     chown -R $SITENAME:$SITENAME $datadir
   else
     # no volume mounts, move ORIG folder back to its default location

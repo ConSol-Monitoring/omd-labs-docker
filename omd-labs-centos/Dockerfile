@@ -29,7 +29,7 @@ ENV ANSIBLE_VERBOSITY=
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
-RUN omd create -u 1000 -g 1000 $SITENAME || true
+RUN echo "create OMD site: $SITENAME" && omd create -u 1000 -g 1000 $SITENAME || true
 
 # PERSISTENT VOLUMES
 # Dynamic OMD data folders (etc, local, var) are renamed to .ORIG.
@@ -44,17 +44,12 @@ RUN mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
     mv /omd/sites/$SITENAME/var /omd/sites/$SITENAME/var.ORIG
 
 # -- ONBUILD
-# when used as a base image, create another site if SITENAME was set to something else
-#ONBUILD RUN [ "$SITENAME" != "demo" ] && echo "anderer als $SITENAME"
-#ONBUILD RUN if [ "$SITENAME" == "demo" ]; then echo "gleich $SITENAME"; fi
-#ONBUILD RUN if [ "$SITENAME" != "demo" ]; then echo "ungleich $SITENAME"; fi
-
-
-#ONBUILD RUN if [ "$SITENAME" != "demo" ]; then omd create -u 1001 -g 1001 $SITENAME || true; fi
-ONBUILD RUN [ "$SITENAME" != "demo" ] && omd create -u 1001 -g 1001 $SITENAME || true
-
-ONBUILD RUN [ "$SITENAME" != "demo" ] && mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
-    mv /omd/sites/$SITENAME/etc /omd/sites/$SITENAME/etc.ORIG && \
-    mv /omd/sites/$SITENAME/var /omd/sites/$SITENAME/var.ORIG || true
+# when used as a base image, this instructions trigger the creation of another site if NEW_SITENAME is not `demo`
+ONBUILD ARG NEW_SITENAME=demo
+ONBUILD ENV NEW_SITENAME=$NEW_SITENAME
+ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
+ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && mv /omd/sites/$NEW_SITENAME/local /omd/sites/$NEW_SITENAME/local.ORIG && \
+    mv /omd/sites/$NEW_SITENAME/etc /omd/sites/$NEW_SITENAME/etc.ORIG && \
+    mv /omd/sites/$NEW_SITENAME/var /omd/sites/$NEW_SITENAME/var.ORIG || true
 
 CMD ["./start.sh"]

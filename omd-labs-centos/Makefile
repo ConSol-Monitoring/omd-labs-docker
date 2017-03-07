@@ -22,9 +22,9 @@ build:
 	docker build -t $(IMAGE) $(BUILDARGS) .
 	@echo "Successfully built" $(IMAGE)
 start:
-	docker run -p 8443:443 -d $(IMAGE)
+	docker run --name omd -p 8443:443 -d $(IMAGE)
 startvol:
-	docker run -d -p 8443:443             \
+	docker run --name omd -d -p 8443:443             \
 	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local \
 	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc     \
 	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var     \
@@ -32,9 +32,9 @@ startvol:
 echo:
 	@echo $(IMAGE)
 bash:
-	docker run --rm -p 8443:443 -it $(IMAGE) /bin/bash
+	docker run  --name omd --rm -p 8443:443 -it $(IMAGE) /bin/bash
 bashvol:
-	docker run --rm -p 8443:443 -it \
+	docker run  --name omd --rm -p 8443:443 -it \
 	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local \
 	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc     \
 	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var     \
