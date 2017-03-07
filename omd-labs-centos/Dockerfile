@@ -52,4 +52,4 @@ ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && mv /omd/sites/$NEW_SITENAME/local /
     mv /omd/sites/$NEW_SITENAME/etc /omd/sites/$NEW_SITENAME/etc.ORIG && \
     mv /omd/sites/$NEW_SITENAME/var /omd/sites/$NEW_SITENAME/var.ORIG || true
 
-CMD ["./start.sh"]
+CMD ["/root/start.sh"]
