@@ -2,7 +2,7 @@ FROM centos:7
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20161207
+ENV REFRESHED 20170308
 
 RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
     yum clean all && \
@@ -28,6 +28,7 @@ ENV ANSIBLE_VERBOSITY=
 # -- OMD site creation (DEMO)
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
+RUN echo "export SITENAME=$SITENAME" > .sitename.env
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
 RUN echo "create OMD site: $SITENAME" && omd create -u 1000 -g 1000 $SITENAME || true
 
@@ -47,8 +48,8 @@ RUN mv /omd/sites/$SITENAME/local /omd/sites/$SITENAME/local.ORIG && \
 # when used as a base image, this instructions trigger the creation of another site if NEW_SITENAME is not `demo`
 ONBUILD ARG NEW_SITENAME=demo
 ONBUILD ENV NEW_SITENAME=$NEW_SITENAME
-ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
-ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && mv /omd/sites/$NEW_SITENAME/local /omd/sites/$NEW_SITENAME/local.ORIG && \
+ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "export SITENAME=$NEW_SITENAME" > .sitename.env && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
+ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] &&  mv /omd/sites/$NEW_SITENAME/local /omd/sites/$NEW_SITENAME/local.ORIG && \
     mv /omd/sites/$NEW_SITENAME/etc /omd/sites/$NEW_SITENAME/etc.ORIG && \
     mv /omd/sites/$NEW_SITENAME/var /omd/sites/$NEW_SITENAME/var.ORIG || true
 

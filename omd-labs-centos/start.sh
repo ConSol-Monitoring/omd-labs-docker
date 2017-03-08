@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-if [ -n "$NEW_SITENAME" ] ; then
-    echo "use NEW_SITENAME: $NEW_SITENAME"
-    export SITENAME="$NEW_SITENAME"
-fi
+
+source .sitename.env
 
 echo "Config and start OMD site: $SITENAME"
 echo "--------------------------------------"
