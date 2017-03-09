@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source .sitename.env
+source /root/.sitename.env
 
 echo "Config and start OMD site: $SITENAME"
 echo "--------------------------------------"
