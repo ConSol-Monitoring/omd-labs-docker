@@ -30,11 +30,39 @@ Run the "demo" site in OMD Labs Edition:
 Use the Makefile to work with *locally built* images:
 
     # run a local image
-    make start
+    make -f Makefile.omd-labs-centos start
     # build a "local/" image without overwriting the consol/ image
-    make build
+    make -f Makefile.omd-labs-centos build
     # start just the bash
-    make bash
+    make -f Makefile.omd-labs-centos bash
+
+The container will log its startup process:
+
+```
+Config and start OMD site: demo
+--------------------------------------
+Data volume check...
+--------------------------------------
+ * [LOCAL]    /opt/omd/sites/demo/local
+ * [LOCAL]    /opt/omd/sites/demo/etc
+ * [LOCAL]    /opt/omd/sites/demo/var
+
+Checking for Ansible drop-in...
+--------------------------------------
+Nothing to do (/root/ansible_dropin/playbook.yml not found).
+
+omd-labs: Starting site demo...
+--------------------------------------
+Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
+Starting rrdcached...OK
+Starting npcd...OK
+Starting nagios...OK
+Starting dedicated Apache for site demo...OK
+Initializing Crontab...OK
+OK
+```
+
+Notice the section "Data volume check". In this case there were no host mounted data volumes used. The "start.sh" script has renamed all `.ORIG` folders to the original name in case there are no mounted volumes.
 
 ### run a custom site
 
@@ -42,47 +70,57 @@ If you want to create a custom site, you have to build an own image:
 
 * clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-centos`
 * build a local image:
-      SITENAME=mynewsite
-      make build    
+      export NEW_SITENAME=mynewsite; make -f Makefile.omd-labs-centos build    
 * run the image:
       docker run -p 8443:443 local/omd-labs-centos
 
 ### Use data containers
 
-#### Generate data folders
+#### Host mounted data folders
 
-As soon as the container dies, all monitoring data (configuration files, RRD data, InfluxDB, log files etc.) are lost, too.
-To store variable data of OMD (`etc, local, var` in `$OMD_ROOT`) into a host-mounted volume, you must first extract the data out of the container:  
+As soon as the container dies, all monitoring data (configuration files, RRD data, InfluxDB, log files etc.) are lost, too. To keep the data persistent, use host mounted volumes.
 
-Start the container manually with three host-mounted volumes (the folder `site` and its ubfolders will be created automatically):
+This command
 
-      make bashvol
+      make -f Makefile.omd-labs-centos startvol
 
-This will start a shell in the container. Check that the folders are mounted correctly:
+starts the container with three volume mounts:
 
-      [root@3d98c2a9691e ~]# mount | grep omd
-      osxfs on /opt/omd/sites/demo/local type fuse.osxfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0,allow_other,max_read=1048576)
-      osxfs on /opt/omd/sites/demo/etc type fuse.osxfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0,allow_other,max_read=1048576)
-      osxfs on /opt/omd/sites/demo/var type fuse.osxfs (rw,nosuid,nodev,relatime,user_id=0,group_id=0,allow_other,max_read=1048576)   
+* `./site/etc` => `$OMD_ROOT/etc`
+* `./site/local` => `$OMD_ROOT/local`
+* `./site/var` => `$OMD_ROOT/var`
 
-Change to the site user (default: demo). You will see that there is a `.ORIG` folder for each data directory. These folders were renamed directly after the site creation to allow mounting external data (`etc, local, var`) to the original name (reason: symlinks are *not* allowed here!).
+On the very first start, this folders will be created on the host file system.
+In that case, the `start.sh` populates them with the content of the original folders (`etc.ORIG, local.ORIG, var.ORIG`) within the container:
 
-(The "start.sh" script will rename all `.ORIG` folders to the original name in case there are no mounted volumes. All this is done *before* the OMD site startup.)
+```
+Config and start OMD site: demo
+--------------------------------------
+Data volume check...
+--------------------------------------
+ * [EXTERNAL] /opt/omd/sites/demo/local
+ * [EXTERNAL] /opt/omd/sites/demo/etc
+ * [EXTERNAL] /opt/omd/sites/demo/var
 
-      [root@3d98c2a9691e ~]# su - demo
-      OMD[demo]:~$ ls -la  | grep -E "(etc|local|var)"
-      drwxr-xr-x  2 root root   68 Feb 17 07:41 etc/
-      drwxr-xr-x 47 demo demo 4096 Feb 17  2017 etc.ORIG/
-      drwxr-xr-x  2 root root   68 Feb 17 07:41 local/
-      drwxr-xr-x  8 demo demo 4096 Feb 17  2017 local.ORIG/
-      drwxr-xr-x  2 root root   68 Feb 17 07:41 var/
-      drwxr-xr-x 19 demo demo 4096 Feb 10 09:23 var.ORIG/
+Checking for Ansible drop-in...
+--------------------------------------
+Nothing to do (/root/ansible_dropin/playbook.yml not found).
 
-Now rsync all files of the `.ORIG` folders into the mounted volumes:
+omd-labs: Starting site demo...
+--------------------------------------
+Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
+Starting rrdcached...OK
+Starting npcd...OK
+Starting nagios...OK
+Starting dedicated Apache for site demo...OK
+Initializing Crontab...OK
+OK
+```
 
-      OMD[demo]:~$ for d in etc var "local"; do rsync -av "$d.ORIG/" "$d"; done
+On the next start the folders are *not* empty anymore and used as usual.
 
-Exit the container. You should see a new folder `site` within the project, containing the three folders `etc, local` and `var`.
+
+
 
 #### Start OMD-Labs with data volumes
 
