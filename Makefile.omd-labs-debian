@@ -5,7 +5,7 @@
 
 # run 'make echo' to show the image name you're working on.
 
-REPO = local/$(shell basename `pwd`)
+REPO = local/omd-labs-debian
 TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/latest/')
 
 IMAGE=$(REPO):$(TAG)
@@ -19,7 +19,7 @@ endif
 .PHONY: build bash start echo
 
 build:
-	docker build -t $(IMAGE) $(BUILDARGS) .
+	docker build -f Dockerfile.omd-labs-debian -t $(IMAGE) $(BUILDARGS) .
 	@echo "Successfully built" $(IMAGE)
 start:
 	docker run --name omd -p 8443:443 -d $(IMAGE)
