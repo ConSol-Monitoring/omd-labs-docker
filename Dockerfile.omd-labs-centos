@@ -17,9 +17,9 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
 #### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
-ADD ./start.sh $HOME
+ADD ./scripts/centos/start.sh $HOME
 
-#### ansible ################################################ 
+#### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
 ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
 ENV PYTHONPATH=/omd/versions/default/lib/python/

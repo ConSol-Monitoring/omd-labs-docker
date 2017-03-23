@@ -26,9 +26,9 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 #### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
-ADD ./start.sh $HOME
+ADD ./scripts/ubuntu/start.sh $HOME
 
-#### ansible ################################################ 
+#### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
 ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
 ENV PYTHONPATH=/omd/versions/default/lib/python/
