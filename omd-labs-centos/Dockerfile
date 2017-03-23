@@ -4,6 +4,7 @@ EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20170308
 
+### OMD installation ######################################
 RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
     yum clean all && \
     yum -y update && \
@@ -13,26 +14,26 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
     yum -y update && \
     yum -y install omd-labs-edition-daily
 
-#### user environment
+#### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./start.sh $HOME
 
-#### ansible
+#### ansible ################################################ 
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
 ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
 ENV PYTHONPATH=/omd/versions/default/lib/python/
 ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
 ENV ANSIBLE_VERBOSITY=
 
-# -- OMD site creation (DEMO)
+### -- OMD site creation (DEMO) ##############################
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
 RUN echo "export SITENAME=$SITENAME" > .sitename.env
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
 RUN echo "create OMD site: $SITENAME" && omd create -u 1000 -g 1000 $SITENAME || true
 
-# PERSISTENT VOLUMES
+### PERSISTENT VOLUMES #######################################
 # Dynamic OMD data folders (etc, local, var) are renamed to .ORIG.
 # On run time the start script (start.sh) will check if any of this folders is mounted from the host
 # - if not => no data container mounts

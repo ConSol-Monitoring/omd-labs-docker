@@ -18,9 +18,9 @@ for dir in "local" "etc" "var"; do
         # Populate etc/ directory
         echo " * [EXTERNAL] $datadir is empty -> initialize it"
         echo "--------------------------------------"
-        rsync -av $datadir.ORIG/ $datadir/
+        rsync -av "$datadir.ORIG/" "$datadir/"
     fi
-    chown -R $SITENAME:$SITENAME $datadir
+    chown -R "$SITENAME:$SITENAME" "$datadir"
   else
     # no volume mounts, move ORIG folder back to its default location
     mv $datadir{.ORIG,}
@@ -32,9 +32,9 @@ echo
 
 echo "Checking for Ansible drop-in..."
 echo "--------------------------------------"
-if [ -r $ANSIBLE_DROPIN/playbook.yml ]; then
+if [ -r "$ANSIBLE_DROPIN/playbook.ym"l ]; then
   echo "Executing Ansible drop-in..."
-  /omd/versions/default/bin/ansible-playbook -i localhost, $ANSIBLE_DROPIN/playbook.yml -c local $ANSIBLE_VERBOSITY -e SITENAME=$SITENAME
+  /omd/versions/default/bin/ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local "$ANSIBLE_VERBOSITY" -e SITENAME=$SITENAME
 else
   echo "Nothing to do ($ANSIBLE_DROPIN/playbook.yml not found)."
 fi
