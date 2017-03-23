@@ -18,7 +18,7 @@ for dir in "local" "etc" "var"; do
         # Populate etc/ directory
         echo " * [EXTERNAL] $datadir is empty -> initialize it"
         echo "--------------------------------------"
-        rsync -av "$datadir.ORIG/" "$datadir/"
+        rsync -a "$datadir.ORIG/" "$datadir/"
     fi
     chown -R "$SITENAME:$SITENAME" "$datadir"
   else
