@@ -30,20 +30,19 @@ Run the "demo" site in OMD Labs Edition:
 Use the Makefile to work with *locally built* images:
 
     # run a local image
-    make start
+    make -f Makefile.omd-labs-centos start
     # build a "local/" image without overwriting the consol/ image
-    make build
+    make -f Makefile.omd-labs-centos build
     # start just the bash
-    make bash
+    make -f Makefile.omd-labs-centos bash
 
 ### run a custom site
 
 If you want to create a custom site, you have to build an own image:
 
-* clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-centos`
+* clone this repository
 * build a local image:
-      SITENAME=mynewsite
-      make build    
+      SITENAME=mynewsite make -f Makefile.omd-labs-centos build    
 * run the image:
       docker run -p 8443:443 local/omd-labs-centos
 
@@ -56,7 +55,7 @@ To store variable data of OMD (`etc, local, var` in `$OMD_ROOT`) into a host-mou
 
 Start the container manually with three host-mounted volumes (the folder `site` and its ubfolders will be created automatically):
 
-      make bashvol
+      make -f Makefile.omd-labs-centos bashvol
 
 This will start a shell in the container. Check that the folders are mounted correctly:
 
@@ -88,11 +87,11 @@ Exit the container. You should see a new folder `site` within the project, conta
 
 To test if everything worked, simply start the container with
 
-      make startvol
+      make -f Makefile.omd-labs-centos startvol
 
 This starts the container with the three data volumes. Everything the container writes into one of those three folder, it will write it into the persistent file system.   
 
-(`make startvol` is just a handy shortcut to bring up the container. In Kubernetes/OpenShift you won't need this.)  
+(`make -f Makefile.omd-labs-centos startvol` is just a handy shortcut to bring up the container. In Kubernetes/OpenShift you won't need this.)  
 
 ## Ansible drop-ins
 
