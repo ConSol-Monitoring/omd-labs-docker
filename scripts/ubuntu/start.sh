@@ -34,7 +34,7 @@ echo "Checking for Ansible drop-in..."
 echo "--------------------------------------"
 if [ -r "$ANSIBLE_DROPIN/playbook.ym"l ]; then
   echo "Executing Ansible drop-in..."
-  /omd/versions/default/bin/ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local "$ANSIBLE_VERBOSITY" -e SITENAME=$SITENAME
+  /omd/versions/default/bin/ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local $ANSIBLE_VERBOSITY -e SITENAME=$SITENAME
 else
   echo "Nothing to do ($ANSIBLE_DROPIN/playbook.yml not found)."
 fi
