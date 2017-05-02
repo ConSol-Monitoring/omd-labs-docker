@@ -6,7 +6,7 @@
 # run 'make echo' to show the image name you're working on.
 
 REPO = local/omd-labs-ubuntu
-TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/latest/')
+TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/nightly/')
 
 IMAGE=$(REPO):$(TAG)
 
