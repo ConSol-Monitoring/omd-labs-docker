@@ -27,6 +27,7 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/debian/start.sh $HOME
+RUN chmod +x $HOME/start.sh
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin

@@ -17,6 +17,7 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/centos/start.sh $HOME
+RUN chmod +x $HOME/start.sh
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
