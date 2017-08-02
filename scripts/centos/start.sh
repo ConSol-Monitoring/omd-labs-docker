@@ -26,14 +26,14 @@ for dir in "local" "etc" "var"; do
     if [ ! "$(ls -A $d_mount)" ]; then
         # mount is empty => sync dir in mount
         echo "   => $dir.mount is empty; initial sync from local $dir ..."
-        rsync -rlptD --quiet "$d_local/" "$d_mount"
+        su - $SITENAME -c "rsync -rlptD --quiet $d_local/ $d_mount"
         [ $? -gt 0 ] && echo "ERROR!"
     else
         # mount contains data => sync mount in dir
         echo "   <= Volume contains data; sync into local $dir ..."
-        rsync -rlptD --quiet "$d_mount/" "$d_local"
+        su - $SITENAME -c "rsync -rlptD --quiet $d_mount/ $d_local"
         [ $? -gt 0 ] && echo "ERROR!"
-        chown -R $SITENAME:$SITENAME "$d_local"
+        #chown -R $SITENAME:$SITENAME "$d_local"
     fi
     echo "      writing the lsyncd config for $dir.mount..."
     cat >>$OMD_ROOT/.lsyncd <<EOF
