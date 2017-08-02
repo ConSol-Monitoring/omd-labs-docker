@@ -37,8 +37,5 @@ RUN echo "create OMD site: $SITENAME" && omd create -u 1000 -g 1000 $SITENAME ||
 ONBUILD ARG NEW_SITENAME=demo
 ONBUILD ENV NEW_SITENAME=$NEW_SITENAME
 ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "export SITENAME=$NEW_SITENAME" > .sitename.env && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
-ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] &&  mv /omd/sites/$NEW_SITENAME/local /omd/sites/$NEW_SITENAME/local.ORIG && \
-    mv /omd/sites/$NEW_SITENAME/etc /omd/sites/$NEW_SITENAME/etc.ORIG && \
-    mv /omd/sites/$NEW_SITENAME/var /omd/sites/$NEW_SITENAME/var.ORIG || true
 
 CMD ["/root/start.sh"]

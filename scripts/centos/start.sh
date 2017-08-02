@@ -8,9 +8,9 @@ echo "--------------------------------------"
 trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
 
-# mounts leer => synce dirs in mounts       / lsyncd dir->mount
-# mounts gefüllt => synce mounts in dirs    / lsyncd dir->mount
-# keine mounts => mache nix                 / kein lsyncd
+# mounts empty => sync dirs in mounts        / lsyncd dir->mount
+# mounts not empty => sync mounts in dirs    / lsyncd dir->mount
+# no mounts => do nothing                    / no lsyncd
 
 echo "Checking for volume mounts..."
 echo "--------------------------------------"
@@ -22,7 +22,7 @@ for dir in "local" "etc" "var"; do
     echo " * $dir/: [No Volume]"
   else
     # volume mount exists
-    echo " * $dir/: [Volume] at $d_mount"
+    echo " * $dir/: [EXTERNAL Volume] at $d_mount"
     if su - $SITENAME -c "test -w '$d_mount'" ; then
         echo "   * mounted volume is writable"
     else
@@ -32,15 +32,14 @@ for dir in "local" "etc" "var"; do
         # mount is empty => sync dir in mount
         echo "   => $dir.mount is empty; initial sync from local $dir ..."
         su - $SITENAME -c "rsync -rlptD --quiet $d_local/ $d_mount"
-        [ $? -gt 0 ] && echo "ERROR!"
+        [ $? -gt 0 ] && echo "ERROR: sync $d_local -> $d_mount!" && exit -1
     else
         # mount contains data => sync mount in dir
         echo "   <= Volume contains data; sync into local $dir ..."
         su - $SITENAME -c "rsync -rlptD --quiet $d_mount/ $d_local"
-        [ $? -gt 0 ] && echo "ERROR!"
-        #chown -R $SITENAME:$SITENAME "$d_local"
+        [ $? -gt 0 ] && echo "ERROR: sync $d_mount -> $d_local" && exit -1
     fi
-    echo "      writing the lsyncd config for $dir.mount..."
+    echo "   * writing the lsyncd config for $dir.mount..."
     cat >>$OMD_ROOT/.lsyncd <<EOF
 sync {
    default.rsync,

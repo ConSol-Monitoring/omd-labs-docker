@@ -41,11 +41,12 @@ The container will log its startup process:
 ```
 Config and start OMD site: demo
 --------------------------------------
-Data volume check...
+Checking for volume mounts...
 --------------------------------------
- * [LOCAL]    /opt/omd/sites/demo/local
- * [LOCAL]    /opt/omd/sites/demo/etc
- * [LOCAL]    /opt/omd/sites/demo/var
+ * local/: [No Volume]
+ * etc/: [No Volume]
+ * var/: [No Volume]
+
 
 Checking for Ansible drop-in...
 --------------------------------------
@@ -53,10 +54,9 @@ Nothing to do (/root/ansible_dropin/playbook.yml not found).
 
 omd-labs: Starting site demo...
 --------------------------------------
-Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
-Starting rrdcached...OK
+Preparing tmp directory /omd/sites/demo/tmp...Starting rrdcached...OK
 Starting npcd...OK
-Starting nagios...OK
+Starting naemon...OK
 Starting dedicated Apache for site demo...OK
 Initializing Crontab...OK
 OK
@@ -91,16 +91,30 @@ starts the container with three volume mounts:
 * `./site/var` => `$OMD_ROOT/var`
 
 On the very first start, this folders will be created on the host file system.
-In that case, the `start.sh` populates them with the content of the original folders (`etc.ORIG, local.ORIG, var.ORIG`) within the container:
+In that case, the `start.sh` synchronize ongoing through `lsycnd` the content with the one of the original folders (`etc, local, var`) within the container:
 
 ```
 Config and start OMD site: demo
 --------------------------------------
-Data volume check...
+Checking for volume mounts...
 --------------------------------------
- * [EXTERNAL] /opt/omd/sites/demo/local
- * [EXTERNAL] /opt/omd/sites/demo/etc
- * [EXTERNAL] /opt/omd/sites/demo/var
+ * local/: [EXTERNAL Volume] at /opt/omd/sites/demo/local.mount
+   * mounted volume is writable
+   => local.mount is empty; initial sync from local local ...
+   * writing the lsyncd config for local.mount...
+ * etc/: [EXTERNAL Volume] at /opt/omd/sites/demo/etc.mount
+   * mounted volume is writable
+   => etc.mount is empty; initial sync from local etc ...
+   * writing the lsyncd config for etc.mount...
+ * var/: [EXTERNAL Volume] at /opt/omd/sites/demo/var.mount
+   * mounted volume is writable
+   => var.mount is empty; initial sync from local var ...
+   * writing the lsyncd config for var.mount...
+
+lsyncd: Starting lsyncd ...
+--------------------------------------
+16:38:44 Normal: --- Startup, daemonizing ---
+16:38:44 Normal: --- Startup, daemonizing ---
 
 Checking for Ansible drop-in...
 --------------------------------------
@@ -108,10 +122,9 @@ Nothing to do (/root/ansible_dropin/playbook.yml not found).
 
 omd-labs: Starting site demo...
 --------------------------------------
-Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
-Starting rrdcached...OK
+Preparing tmp directory /omd/sites/demo/tmp...Starting rrdcached...OK
 Starting npcd...OK
-Starting nagios...OK
+Starting naemon...OK
 Starting dedicated Apache for site demo...OK
 Initializing Crontab...OK
 OK
@@ -128,7 +141,7 @@ To test if everything worked, simply start the container with
 
       make startvol
 
-This starts the container with the three data volumes. Everything the container writes into one of those three folder, it will write it into the persistent file system.   
+This starts the container with the three data volumes. Everything the container writes into one of those three folder, it will synchronized into the persistent file system.   
 
 (`make startvol` is just a handy shortcut to bring up the container. In Kubernetes/OpenShift you won't need this.)  
 
