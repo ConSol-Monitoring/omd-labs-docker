@@ -26,7 +26,7 @@ for dir in "local" "etc" "var"; do
     if su - $SITENAME -c "test -w '$d_mount'" ; then
         echo "   * mounted volume is writable"
     else
-        echo "   * ERROR: Mounted volume is not writable: $d_mount" && exit -1
+        echo "   * ERROR: Mounted volume is not writeable: $d_mount" && exit -1
     fi
     if [ ! "$(ls -A $d_mount)" ]; then
         # mount is empty => sync dir in mount
