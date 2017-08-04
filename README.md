@@ -86,12 +86,17 @@ This command
 
 starts the container with three volume mounts:
 
-* `./site/etc` => `$OMD_ROOT/etc`
-* `./site/local` => `$OMD_ROOT/local`
-* `./site/var` => `$OMD_ROOT/var`
+* `./site/etc` => `$OMD_ROOT/etc.mount`
+* `./site/local` => `$OMD_ROOT/local.mount`
+* `./site/var` => `$OMD_ROOT/var.mount`
 
 On the very first start, this folders will be created on the host file system.
-In that case, the `start.sh` synchronize ongoing through `lsycnd` the content with the one of the original folders (`etc, local, var`) within the container:
+In that case, the `start.sh` synchronize ongoing through `lsycnd` the content into the volumes (`etc.mount`, `local.mount`, `var.mount`) from the original folders (`etc`, `local`, `var`):
+
+* `$OMD_ROOT/etc` => `$OMD_ROOT/etc.mount`
+* `$OMD_ROOT/local` => `$OMD_ROOT/local.mount`
+* `$OMD_ROOT/var` => `$OMD_ROOT/var.mount`
+
 
 ```
 Config and start OMD site: demo
