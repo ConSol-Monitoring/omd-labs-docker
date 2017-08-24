@@ -6,3 +6,16 @@
   - name: "DEBUG"
     debug:
       msg: "Nothing defined yet. Use this playbook to adapt the container/OMD site {{ SITENAME }} at runtime."
+
+# - name: configure Sakuli extension
+#   become: yes
+#   become_user: "{{ SITENAME }}"
+#   become_method: "su"
+#   become_flags: "-"
+#   command: make "{{ item }}"
+#   with_items:
+#     - "gearman"
+#     - "grafana"
+#     - "screenshot_history"
+#   args:
+#     chdir: "$OMD_ROOT/share/sakuli/setup"
