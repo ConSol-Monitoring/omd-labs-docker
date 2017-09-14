@@ -48,6 +48,7 @@ sync {
    delay  = 0
 }
 EOF
+    chown $SITENAME:$SITENAME $OMD_ROOT/.lsyncd
   fi
 done
 
