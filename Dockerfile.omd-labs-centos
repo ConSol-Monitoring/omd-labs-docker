@@ -8,7 +8,7 @@ ENV REFRESHED 20170831
 RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
     yum clean all && \
     yum -y update && \
-    yum -y install which lsof vim git openssh-server tree file make sudo lsyncd unzip
+    yum -y install which lsof vim git openssh-server tree file make sudo lsyncd unzip screen
 
 RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testing.rhel7.noarch.rpm" && \
     yum -y install omd-labs-edition-daily
@@ -17,6 +17,7 @@ RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testi
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/centos/start.sh $HOME
+ADD .screenrc $HOME
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
