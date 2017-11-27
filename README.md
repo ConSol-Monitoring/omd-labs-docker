@@ -157,7 +157,7 @@ For some time OMD-Labs comes with **full Ansible support**, which we can use to 
 ### start sequence
 By default, the OMD-labs containers start with the CMD `/root/start.sh`. This script
 
-* checks if there is a `playbook.yml` in `$ANSIBLE_DROPIN` (default: `/root/ansible_dropin`, changeable by environemt). If found, the playbook is executed. It is completely up to you if you only place one single task in `playbook.yml`, or if you also include Ansible roles. (with a certain point of complexity, you should think about a separate image, though...)
+* checks if there is a `playbook.yml` in `$ANSIBLE_DROPIN` (default: `/root/ansible_dropin`, changeable by environment). If found, the playbook is executed. It is completely up to you if you only place one single task in `playbook.yml`, or if you also include Ansible roles. (with a certain point of complexity, you should think about a separate image, though...)
 * starts the OMD site "demo" & Apache as a foreground process
 
 ### Include Ansible drop-ins
@@ -168,6 +168,6 @@ Just a folder containing a valid playbook into the container:
 
 ### Debugging
 
-If you want to see more verbose output from Ansible to debug your role, add the environment variable `ANSIBLE_VERBOSITY`:
+If you want to see more verbose output from Ansible to debug your role, adjust the environment variable value [`ANSIBLE_VERBOSITY`](http://docs.ansible.com/ansible/latest/debug_module.html) to e.g. `3`:
 
-    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
+    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY=3 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
