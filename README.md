@@ -41,11 +41,12 @@ The container will log its startup process:
 ```
 Config and start OMD site: demo
 --------------------------------------
-Data volume check...
+Checking for volume mounts...
 --------------------------------------
- * [LOCAL]    /opt/omd/sites/demo/local
- * [LOCAL]    /opt/omd/sites/demo/etc
- * [LOCAL]    /opt/omd/sites/demo/var
+ * local/: [No Volume]
+ * etc/: [No Volume]
+ * var/: [No Volume]
+
 
 Checking for Ansible drop-in...
 --------------------------------------
@@ -53,10 +54,9 @@ Nothing to do (/root/ansible_dropin/playbook.yml not found).
 
 omd-labs: Starting site demo...
 --------------------------------------
-Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
-Starting rrdcached...OK
+Preparing tmp directory /omd/sites/demo/tmp...Starting rrdcached...OK
 Starting npcd...OK
-Starting nagios...OK
+Starting naemon...OK
 Starting dedicated Apache for site demo...OK
 Initializing Crontab...OK
 OK
@@ -86,21 +86,40 @@ This command
 
 starts the container with three volume mounts:
 
-* `./site/etc` => `$OMD_ROOT/etc`
-* `./site/local` => `$OMD_ROOT/local`
-* `./site/var` => `$OMD_ROOT/var`
+* `./site/etc` => `$OMD_ROOT/etc.mount`
+* `./site/local` => `$OMD_ROOT/local.mount`
+* `./site/var` => `$OMD_ROOT/var.mount`
 
 On the very first start, this folders will be created on the host file system.
-In that case, the `start.sh` populates them with the content of the original folders (`etc.ORIG, local.ORIG, var.ORIG`) within the container:
+In that case, the `start.sh` synchronize ongoing through `lsycnd` the content into the volumes (`etc.mount`, `local.mount`, `var.mount`) from the original folders (`etc`, `local`, `var`):
+
+* `$OMD_ROOT/etc` => `$OMD_ROOT/etc.mount`
+* `$OMD_ROOT/local` => `$OMD_ROOT/local.mount`
+* `$OMD_ROOT/var` => `$OMD_ROOT/var.mount`
+
 
 ```
 Config and start OMD site: demo
 --------------------------------------
-Data volume check...
+Checking for volume mounts...
 --------------------------------------
- * [EXTERNAL] /opt/omd/sites/demo/local
- * [EXTERNAL] /opt/omd/sites/demo/etc
- * [EXTERNAL] /opt/omd/sites/demo/var
+ * local/: [EXTERNAL Volume] at /opt/omd/sites/demo/local.mount
+   * mounted volume is writable
+   => local.mount is empty; initial sync from local local ...
+   * writing the lsyncd config for local.mount...
+ * etc/: [EXTERNAL Volume] at /opt/omd/sites/demo/etc.mount
+   * mounted volume is writable
+   => etc.mount is empty; initial sync from local etc ...
+   * writing the lsyncd config for etc.mount...
+ * var/: [EXTERNAL Volume] at /opt/omd/sites/demo/var.mount
+   * mounted volume is writable
+   => var.mount is empty; initial sync from local var ...
+   * writing the lsyncd config for var.mount...
+
+lsyncd: Starting lsyncd ...
+--------------------------------------
+16:38:44 Normal: --- Startup, daemonizing ---
+16:38:44 Normal: --- Startup, daemonizing ---
 
 Checking for Ansible drop-in...
 --------------------------------------
@@ -108,10 +127,9 @@ Nothing to do (/root/ansible_dropin/playbook.yml not found).
 
 omd-labs: Starting site demo...
 --------------------------------------
-Preparing tmp directory /omd/sites/demo/tmp...Starting gearmand...OK
-Starting rrdcached...OK
+Preparing tmp directory /omd/sites/demo/tmp...Starting rrdcached...OK
 Starting npcd...OK
-Starting nagios...OK
+Starting naemon...OK
 Starting dedicated Apache for site demo...OK
 Initializing Crontab...OK
 OK
@@ -128,7 +146,7 @@ To test if everything worked, simply start the container with
 
       make startvol
 
-This starts the container with the three data volumes. Everything the container writes into one of those three folder, it will write it into the persistent file system.   
+This starts the container with the three data volumes. Everything the container writes into one of those three folder, it will synchronized into the persistent file system.   
 
 (`make startvol` is just a handy shortcut to bring up the container. In Kubernetes/OpenShift you won't need this.)  
 
@@ -139,7 +157,7 @@ For some time OMD-Labs comes with **full Ansible support**, which we can use to 
 ### start sequence
 By default, the OMD-labs containers start with the CMD `/root/start.sh`. This script
 
-* checks if there is a `playbook.yml` in `$ANSIBLE_DROPIN` (default: `/root/ansible_dropin`, changeable by environemt). If found, the playbook is executed. It is completely up to you if you only place one single task in `playbook.yml`, or if you also include Ansible roles. (with a certain point of complexity, you should think about a separate image, though...)
+* checks if there is a `playbook.yml` in `$ANSIBLE_DROPIN` (default: `/root/ansible_dropin`, changeable by environment). If found, the playbook is executed. It is completely up to you if you only place one single task in `playbook.yml`, or if you also include Ansible roles. (with a certain point of complexity, you should think about a separate image, though...)
 * starts the OMD site "demo" & Apache as a foreground process
 
 ### Include Ansible drop-ins
@@ -150,6 +168,6 @@ Just a folder containing a valid playbook into the container:
 
 ### Debugging
 
-If you want to see more verbose output from Ansible to debug your role, add the environment variable `ANSIBLE_VERBOSITY`:
+If you want to see more verbose output from Ansible to debug your role, adjust the environment variable value [`ANSIBLE_VERBOSITY`](http://docs.ansible.com/ansible/latest/debug_module.html) to e.g. `3`:
 
-    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY="-vv" -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
+    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY=3 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian

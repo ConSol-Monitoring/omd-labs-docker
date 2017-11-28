@@ -24,10 +24,13 @@ build:
 start:
 	docker run -p 8443:443 -d $(IMAGE)
 startvol:
+	mkdir -p site/local
+	mkdir -p site/etc
+	mkdir -p site/var
 	docker run -d -p 8443:443             \
-	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local \
-	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc     \
-	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var     \
+	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local.mount \
+	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc.mount     \
+	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var.mount     \
 	$(IMAGE)
 echo:
 	@echo $(IMAGE)
@@ -35,7 +38,7 @@ bash:
 	docker run --rm -p 8443:443 -it $(IMAGE) /bin/bash
 bashvol:
 	docker run --rm -p 8443:443 -it \
-	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local \
-	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc     \
-	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var     \
+	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local.mount \
+	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc.mount     \
+	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var.mount     \
 	$(IMAGE) /bin/bash
