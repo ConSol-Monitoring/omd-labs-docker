@@ -8,6 +8,7 @@ echo "--------------------------------------"
 trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
 
+
 # mounts empty => sync dirs in mounts        / lsyncd dir->mount
 # mounts not empty => sync mounts in dirs    / lsyncd dir->mount
 # no mounts => do nothing                    / no lsyncd
@@ -55,7 +56,16 @@ done
 echo
 
 if [ -f $OMD_ROOT/.lsyncd ]; then
-  echo "lsyncd: Starting lsyncd ..."
+  echo "lsyncd: writing the global settings..."
+  cat >>$OMD_ROOT/.lsyncd <<EOF
+settings {
+   logfile     = "$OMD_ROOT/var.mount/lsyncd.log",
+   statusFile  = "$OMD_ROOT/.lsyncd_status",
+   inotifyMode = "CloseWrite or Modify"
+}
+EOF
+
+  echo "lsyncd: Starting  ..."
   echo "--------------------------------------"
   su - $SITENAME -c 'lsyncd ~/.lsyncd'
 fi

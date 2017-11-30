@@ -8,6 +8,7 @@ echo "--------------------------------------"
 trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
 
+
 # mounts empty => sync dirs in mounts        / lsyncd dir->mount
 # mounts not empty => sync mounts in dirs    / lsyncd dir->mount
 # no mounts => do nothing                    / no lsyncd
@@ -26,7 +27,7 @@ for dir in "local" "etc" "var"; do
     if su - $SITENAME -c "test -w '$d_mount'" ; then
         echo "   * mounted volume is writable"
     else
-        echo "   * ERROR: Mounted volume is not writable: $d_mount" && exit -1
+        echo "   * ERROR: Mounted volume is not writeable: $d_mount" && exit -1
     fi
     if [ ! "$(ls -A $d_mount)" ]; then
         # mount is empty => sync dir in mount
@@ -48,13 +49,23 @@ sync {
    delay  = 0
 }
 EOF
+    chown $SITENAME:$SITENAME $OMD_ROOT/.lsyncd
   fi
 done
 
 echo
 
 if [ -f $OMD_ROOT/.lsyncd ]; then
-  echo "lsyncd: Starting lsyncd ..."
+  echo "lsyncd: writing the global settings..."
+  cat >>$OMD_ROOT/.lsyncd <<EOF
+settings {
+   logfile     = "$OMD_ROOT/var.mount/lsyncd.log",
+   statusFile  = "$OMD_ROOT/.lsyncd_status",
+   inotifyMode = "CloseWrite or Modify"
+}
+EOF
+
+  echo "lsyncd: Starting  ..."
   echo "--------------------------------------"
   su - $SITENAME -c 'lsyncd ~/.lsyncd'
 fi
@@ -81,5 +92,5 @@ echo
 echo "omd-labs: Starting Apache web server..."
 echo "--------------------------------------"
 
-/usr/sbin/apache2ctl start
+/usr/sbin/httpd
 while true; do sleep 10; done
