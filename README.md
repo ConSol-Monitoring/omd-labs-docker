@@ -137,7 +137,44 @@ OK
 
 On the next start the folders are *not* empty anymore and used as usual.
 
+#### Checking available space on mount point
 
+Before OMD starts, each of the three mount points (etc, local, var) can be checked for free available disk space to ensure that the container can store its data. The threshold can be given as an environent variable in the `docker run` command. If there is not enough space on any mount point, the startup script fails. On a container orchestration platform like OpenShift this should be handled by your deployment config (=the running pod only gets shutdown if the new pod was started properly).   
+
+```
+docker run -d -p 8443:443 \
+  -v $(pwd)/site/local:/omd/sites/demo/local.mount \
+  -v $(pwd)/site/etc:/omd/sites/demo/etc.mount     \
+  -v $(pwd)/site/var:/omd/sites/demo/var.mount     \     
+  -e VOL_VAR_MB_MIN=700000  \
+  -e VOL_ETC_MB_MIN=500     \
+  -e VOL_LOCAL_MB_MIN=6000  \
+  consol/omd-labs-centos:nightly
+
+docker logs 91992828cc1dca7839cb2842933897b94329fe2c6b395c5ccb8b9fa056057679
+Config and start OMD site: demo
+--------------------------------------
+Checking for volume mounts...
+--------------------------------------
+ * local/: [EXTERNAL Volume] at /opt/omd/sites/demo/local.mount
+   * OK: Free space on /opt/omd/sites/demo/local.mount is 499826MB (required: 6000MB)
+   * OK: mounted volume is writable
+   <= Volume contains data; sync into local local ...
+   * writing the lsyncd config for local.mount...
+ * etc/: [EXTERNAL Volume] at /opt/omd/sites/demo/etc.mount
+   * OK: Free space on /opt/omd/sites/demo/etc.mount is 499825MB (required: 500MB)
+   * OK: mounted volume is writable
+   <= Volume contains data; sync into local etc ...
+   * writing the lsyncd config for etc.mount...
+ * var/: [EXTERNAL Volume] at /opt/omd/sites/demo/var.mount
+   * ERROR: Mounted volume has only 499825MB left (required: 700000MB, set by VOL_VAR_MB_MIN).
+no crontab for demo
+Removing Crontab...Stopping Nagflux.... Not running.
+Stopping dedicated Apache for site demo...(not running)...OK
+Stopping naemon...not running...OK
+Stopping Grafana.... Not running.
+Stopping influxdb.... Not running.
+```
 
 
 #### Start OMD-Labs with data volumes

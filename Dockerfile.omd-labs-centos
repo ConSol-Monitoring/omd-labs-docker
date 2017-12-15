@@ -27,6 +27,15 @@ ENV PYTHONPATH=/omd/versions/default/lib/python/
 ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
 ENV ANSIBLE_VERBOSITY=0
 
+#### Mount point space requirements (MB)
+ARG VOL_ETC_MB_MIN
+ARG VOL_LOCAL_MB_MIN
+ARG VOL_VAR_MB_MIN
+
+ENV VOL_ETC_MB_MIN=$VOL_ETC_MB_MIN
+ENV VOL_LOCAL_MB_MIN=$VOL_LOCAL_MB_MIN
+ENV VOL_VAR_MB_MIN=$VOL_VAR_MB_MIN
+
 ### -- OMD site creation (DEMO) ##############################
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
