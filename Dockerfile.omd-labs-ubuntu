@@ -26,7 +26,7 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 #### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
-ADD ./scripts/ubuntu/start.sh $HOME
+ADD ./scripts/start.sh $HOME
 RUN chmod +x $HOME/start.sh
 ADD .screenrc $HOME
 
@@ -47,6 +47,7 @@ ENV VOL_LOCAL_MB_MIN=$VOL_LOCAL_MB_MIN
 ENV VOL_VAR_MB_MIN=$VOL_VAR_MB_MIN
 
 ### -- OMD site creation (DEMO) ##############################
+ENV APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
 RUN echo "export SITENAME=$SITENAME" > .sitename.env

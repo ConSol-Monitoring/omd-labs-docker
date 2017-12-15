@@ -24,22 +24,8 @@ for dir in "local" "etc" "var"; do
   else
     # volume mount exists
     echo " * $dir/: [EXTERNAL Volume] at $d_mount"
-
-    # Volume space requirement check
-    VOL_MB_MIN="VOL_"${dir^^}"_MB_MIN"
-    space_avail=$(df -k -m $d_mount --output=avail | tail -1)
-    if [ "${!VOL_MB_MIN}x" != "x" ]; then
-      if [ $space_avail -lt ${!VOL_MB_MIN} ]; then
-        echo "   * ERROR: Mounted volume has only ${space_avail}MB left (required: ${!VOL_MB_MIN}MB, set by VOL_${dir^^}_MB_MIN)." && exit -1
-      else
-        echo "   * OK: Free space on $d_mount is ${space_avail}MB (required: ${!VOL_MB_MIN}MB)"
-      fi
-    else
-        echo "   * OK: Free space on $d_mount is ${space_avail}MB (VOL_${dir^^}_MB_MIN not set)"
-    fi
-    # writeable test
     if su - $SITENAME -c "test -w '$d_mount'" ; then
-        echo "   * OK: mounted volume is writable"
+        echo "   * mounted volume is writable"
     else
         echo "   * ERROR: Mounted volume is not writeable: $d_mount" && exit -1
     fi
@@ -106,5 +92,4 @@ echo
 echo "omd-labs: Starting Apache web server..."
 echo "--------------------------------------"
 
-/usr/sbin/httpd
-while true; do sleep 10; done
+`$APACHE_CMD`
