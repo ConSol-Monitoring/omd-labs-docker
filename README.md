@@ -1,10 +1,10 @@
 # omd-labs-docker
 
-OMD Labs Nightly (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
+OMD "Labs" Edition (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
 
 Author: Simon Meggle, *simon.meggle at consol.de*
 
-## Automated builds
+## Automated builds, branches & tags
 
 Each image build gets triggered by the OMD Labs build system as soon as there are new packages of OMD available:
 
@@ -12,7 +12,13 @@ Each image build gets triggered by the OMD Labs build system as soon as there ar
 * https://hub.docker.com/r/consol/omd-labs-debian/
 * https://hub.docker.com/r/consol/omd-labs-ubuntu/
 
-The image already contains a "demo" site.
+Automated builds are triggered for the following branches:
+
+* *master* => **:nightly** (=snapshot builds)
+* *vX.XX* => **:vX.XX** (=stable version)
+* *latest* => **:latest** (=latest stable version)
+
+Each image already contains a "demo" site.
 
 ## Usage
 
