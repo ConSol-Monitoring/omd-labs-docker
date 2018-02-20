@@ -3,26 +3,31 @@
 # Branch 'master' leads to no tag (=latest),
 # others to "local/[dirname]:[branchname]
 
-# run 'make echo' to show the image name you're working on.
+DISTRO=centos
 
-REPO = local/omd-labs-centos
+# local builds will be named like this
+REPO = local/omd-labs-$(DISTRO)
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+# BRANCH=TAG, but "master"="nightly"
 TAG  = $(shell git rev-parse --abbrev-ref HEAD | sed 's/master/nightly/')
+# the final image name
 IMAGE=$(REPO):$(TAG)
 
+# will create another OMD site SITENAME, if set
 ifdef SITENAME
 	BUILDARGS = --build-arg SITENAME=$(SITENAME)
 else
   SITENAME=demo
 endif
 
-export DOCKER_REPO=index.docker.io/consol/omd-labs-centos
+export DOCKER_REPO=index.docker.io/consol/omd-labs-$(DISTRO)
 export IMAGE_NAME=$(IMAGE)
 export SOURCE_BRANCH=$(BRANCH)
 
 .PHONY: build bash start echo
 
 build:
+  # the hook is also executed on Docker Hub
 	./hooks/build
 	@echo "Successfully built" $(IMAGE)
 start:

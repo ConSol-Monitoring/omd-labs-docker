@@ -2,7 +2,7 @@ FROM centos:7
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20170831
+ENV REFRESHED 20180220
 
 #### user environment ######################################
 ENV HOME=/root

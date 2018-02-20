@@ -2,7 +2,7 @@ FROM debian:8
 MAINTAINER Simon Meggle<simon.meggle@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20170824
+ENV REFRESHED 20180220
 
 #### user environment ######################################
 ENV HOME=/root
@@ -12,9 +12,11 @@ RUN chmod +x $HOME/start.sh
 ADD .screenrc $HOME
 
 ### OMD installation ######################################
-ADD ./scripts/install_omd.sh $HOME
-RUN chmod +x $HOME/install_omd.sh
-RUN $HOME/install_omd.sh debian
+ARG OMD_VERSION
+ADD ./scripts/install_*.sh $HOME/
+RUN chmod +x $HOME/install_*.sh
+RUN $HOME/install_common.sh debian
+RUN $HOME/install_omd.sh debian $OMD_VERSION
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
