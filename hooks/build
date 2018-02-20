@@ -1,0 +1,12 @@
+#!/bin/bash
+# This hook
+# - exposes the SOURCE_BRANCH as OMD_VERSION to the build process
+# - uses $DOCKER_REPO to access the OS Dockerfile
+# https://docs.docker.com/docker-cloud/builds/advanced/
+
+env | sort
+
+# full path on Dockerhub
+# index.docker.io/consol/omd-labs-debian
+DOCKERFILE=Dockerfile.$(echo $DOCKER_REPO | cut -d "/" -f 3)
+docker build -f $DOCKERFILE -t $IMAGE_NAME --build-arg OMD_VERSION=$(echo ${SOURCE_BRANCH} | sed 's/v//') $@ .

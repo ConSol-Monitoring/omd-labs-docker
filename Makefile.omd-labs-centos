@@ -6,8 +6,8 @@
 # run 'make echo' to show the image name you're working on.
 
 REPO = local/omd-labs-centos
-TAG  = $(shell git rev-parse --abbrev-ref HEAD|sed 's/master/nightly/')
-
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+TAG  = $(shell git rev-parse --abbrev-ref HEAD | sed 's/master/nightly/')
 IMAGE=$(REPO):$(TAG)
 
 ifdef SITENAME
@@ -16,10 +16,14 @@ else
   SITENAME=demo
 endif
 
+export DOCKER_REPO=index.docker.io/consol/omd-labs-centos
+export IMAGE_NAME=$(IMAGE)
+export SOURCE_BRANCH=$(BRANCH)
+
 .PHONY: build bash start echo
 
 build:
-	docker build -f Dockerfile.omd-labs-centos -t $(IMAGE) $(BUILDARGS) .
+	./hooks/build
 	@echo "Successfully built" $(IMAGE)
 start:
 	docker run -p 8443:443 -d $(IMAGE)

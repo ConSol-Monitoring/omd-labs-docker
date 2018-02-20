@@ -4,21 +4,19 @@ EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20170831
 
-### OMD installation ######################################
-RUN rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm" && \
-    yum clean all && \
-    yum -y update && \
-    yum -y install which lsof vim git openssh-server tree file make sudo lsyncd unzip screen
-
-RUN rpm -Uvh "https://labs.consol.de/repo/testing/rhel7/x86_64/labs-consol-testing.rhel7.noarch.rpm" && \
-    yum -y install omd-labs-edition-daily
-
 #### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/start.sh $HOME
 RUN chmod +x $HOME/start.sh
 ADD .screenrc $HOME
+
+### OMD installation ######################################
+ARG OMD_VERSION
+ADD ./scripts/install_*.sh $HOME/
+RUN chmod +x $HOME/install_*.sh
+RUN $HOME/install_common.sh centos
+RUN $HOME/install_omd.sh centos $OMD_VERSION
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
@@ -37,7 +35,6 @@ ENV VOL_LOCAL_MB_MIN=$VOL_LOCAL_MB_MIN
 ENV VOL_VAR_MB_MIN=$VOL_VAR_MB_MIN
 
 ### -- OMD site creation (DEMO) ##############################
-ENV APACHE_CMD="exec /usr/sbin/apachectl -D FOREGROUND"
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
 RUN echo "export SITENAME=$SITENAME" > .sitename.env

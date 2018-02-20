@@ -19,6 +19,7 @@ endif
 .PHONY: build bash start echo
 
 build:
+  export DOCKER_REPO=index.docker.io/consol/omd-labs-ubuntu
 	docker build -f Dockerfile.omd-labs-ubuntu -t $(IMAGE) $(BUILDARGS) .
 	@echo "Successfully built" $(IMAGE)
 start:

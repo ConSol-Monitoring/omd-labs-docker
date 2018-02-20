@@ -4,31 +4,17 @@ EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20170824
 
-### OMD installation ######################################
-ENV DEBIAN_FRONTEND noninteractive
-
-RUN  echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf; \
-    echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf; \
-    echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf; \
-    cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
-
-RUN apt-get update && \
-    apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen
-
-RUN gpg --keyserver keys.gnupg.net --recv-keys F8C1CA08A57B9ED7 && gpg --armor --export F8C1CA08A57B9ED7 | apt-key add - && \
-    echo "deb http://labs.consol.de/repo/testing/debian $(cat /etc/os-release  | grep 'VERSION=' | tr '(' ')' | cut -d ')' -f2) main" > /etc/apt/sources.list.d/labs-consol-testing.list && \
-    apt-get update && \
-    apt-get install -y omd-labs-edition-daily && \
-    apt-get clean
-
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 #### user environment ######################################
 ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/start.sh $HOME
 RUN chmod +x $HOME/start.sh
 ADD .screenrc $HOME
+
+### OMD installation ######################################
+ADD ./scripts/install_omd.sh $HOME
+RUN chmod +x $HOME/install_omd.sh
+RUN $HOME/install_omd.sh debian
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
@@ -47,7 +33,6 @@ ENV VOL_LOCAL_MB_MIN=$VOL_LOCAL_MB_MIN
 ENV VOL_VAR_MB_MIN=$VOL_VAR_MB_MIN
 
 ### -- OMD site creation (DEMO) ##############################
-ENV APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
 ARG SITENAME=demo
 ENV SITENAME=$SITENAME
 RUN echo "export SITENAME=$SITENAME" > .sitename.env
