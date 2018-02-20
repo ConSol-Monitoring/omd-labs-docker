@@ -40,7 +40,6 @@ function install_omd_centos() {
   VERSION=$2
   PACKAGENAME=`pkgName $VERSION`
   REPOVERSION=`repoVersion $VERSION`
-  export APACHE_CMD="exec /usr/sbin/apachectl -D FOREGROUND"
 
   rpm -Uvh "https://labs.consol.de/repo/${REPOVERSION}/rhel7/x86_64/labs-consol-${REPOVERSION}.rhel7.noarch.rpm"
   yum update
@@ -50,9 +49,9 @@ function install_omd_centos() {
 function install_omd_debian() {
   VERSION=$1
   PACKAGENAME=`pkgName $VERSION`
-  REPOVERSION=`repoVersion $VERSION`  export APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
-  export DEBIAN_FRONTEND=noninteractive
+  REPOVERSION=`repoVersion $VERSION`
 
+  export DEBIAN_FRONTEND=noninteractive
   echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf
   echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
   echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
@@ -74,7 +73,7 @@ function install_omd_debian() {
 function install_omd_ubuntu() {
   VERSION=$1
   PACKAGENAME=`pkgName $VERSION`
-  REPOVERSION=`repoVersion $VERSION`  export APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
+  REPOVERSION=`repoVersion $VERSION`  
   export DEBIAN_FRONTEND=noninteractive
 
   echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf
