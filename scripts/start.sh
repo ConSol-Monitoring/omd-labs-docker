@@ -59,7 +59,6 @@ if [ -f $OMD_ROOT/.lsyncd ]; then
   echo "lsyncd: writing the global settings..."
   cat >>$OMD_ROOT/.lsyncd <<EOF
 settings {
-   logfile     = "$OMD_ROOT/var.mount/lsyncd.log",
    statusFile  = "$OMD_ROOT/.lsyncd_status",
    inotifyMode = "CloseWrite or Modify"
 }
