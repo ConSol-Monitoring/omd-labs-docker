@@ -10,6 +10,9 @@ function main() {
     ubuntu) install_omd_ubuntu $2;;
     *) { echo "$1: Unknown OS type!"; exit 1; }
   esac
+
+  # Logrotate settings
+  find /omd/versions/default/skel/etc/logrotate.d -type f -exec sed -i 's/rotate [0-9]*/rotate 0/' {} \;
 }
 
 function pkgName() {
@@ -73,7 +76,7 @@ function install_omd_debian() {
 function install_omd_ubuntu() {
   VERSION=$1
   PACKAGENAME=`pkgName $VERSION`
-  REPOVERSION=`repoVersion $VERSION`  
+  REPOVERSION=`repoVersion $VERSION`
   export DEBIAN_FRONTEND=noninteractive
 
   echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf
