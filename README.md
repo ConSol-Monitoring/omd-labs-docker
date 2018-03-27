@@ -70,15 +70,36 @@ OK
 
 Notice the section "Data volume check". In this case there were no host mounted data volumes used. The "start.sh" script has renamed all `.ORIG` folders to the original name in case there are no mounted volumes.
 
-### run a custom site
+### Custom sites
 
-If you want to create a custom site, you have to build an own image:
+#### Change the default sitename
+The *default sitename* "demo" can be changed. Build a custom image while `SITENAME` is set:
 
 * clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-centos`
 * build a local image:
-      export NEW_SITENAME=mynewsite; make -f Makefile.omd-labs-centos build    
-* run the image:
-      docker run -p 8443:443 local/omd-labs-centos
+```
+export SITENAME=mynewsite; make -f Makefile.omd-labs-centos build    
+```
+
+Each container instance of this image will start the site "mynewsite" instead of "demo".
+
+#### Add another site dynamically
+
+If you need to set the *sitename dynamically* without building the whole image from scratch (see above), you can create images with another OMD-site beneath the default site (see above). Create a custom `Dockerfile` which uses the original image as the base image:
+
+```
+FROM: consol/omd-labs-centos:nightly
+...
+...
+```
+
+The sitename in your custom OMD image can now be changed by setting the variable `NEW_SITENAME` to a new value:
+
+```
+export NEW_SITENAME=anothersite
+```
+
+The ONBUILD commands in the original Dockerfile execute after the current Dockerfile build completes. ONBUILD executes in any child image derived FROM the current image. Think of the ONBUILD command as an instruction the parent Dockerfile gives to the child Dockerfile.
 
 ### Use data containers
 

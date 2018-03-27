@@ -28,7 +28,7 @@ export SOURCE_BRANCH=$(BRANCH)
 
 build:
   # the hook is also executed on Docker Hub
-	./hooks/build
+	./hooks/build $(BUILDARGS)
 	@echo "Successfully built" $(IMAGE)
 start:
 	docker run -p 8443:443 -d $(IMAGE)
