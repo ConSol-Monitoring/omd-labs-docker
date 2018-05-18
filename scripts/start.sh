@@ -82,6 +82,12 @@ fi
 
 echo
 
+echo "crond: Starting ..."
+echo "--------------------------------------"
+crond
+
+echo
+
 echo "omd-labs: Starting site $SITENAME..."
 echo "--------------------------------------"
 omd start $SITENAME
