@@ -5,7 +5,7 @@ source /root/.sitename.env
 echo "Config and start OMD site: $SITENAME"
 echo "--------------------------------------"
 
-trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT EXIT
+trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT
 
 
 
@@ -97,4 +97,5 @@ echo
 echo "omd-labs: Starting Apache web server..."
 echo "--------------------------------------"
 
-`$APACHE_CMD`
+$APACHE_CMD &
+wait
