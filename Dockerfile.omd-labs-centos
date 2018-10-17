@@ -2,7 +2,7 @@ FROM centos:7
 MAINTAINER Sven Nierlein<sven.nierlein@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20180327
+ENV REFRESHED 20181017
 
 #### user environment ######################################
 ENV HOME=/root
