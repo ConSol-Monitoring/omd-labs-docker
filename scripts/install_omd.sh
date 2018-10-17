@@ -61,7 +61,7 @@ function install_omd_debian() {
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
   apt-get update
-  apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen
+  apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen curl
 
   curl -s "https://labs.consol.de/repo/testing/RPM-GPG-KEY" | apt-key add -
   echo "deb http://labs.consol.de/repo/testing/debian $(cat /etc/os-release  | grep 'VERSION=' | tr '(' ')' | cut -d ')' -f2) main" > /etc/apt/sources.list.d/labs-consol-testing.list
@@ -85,7 +85,7 @@ function install_omd_ubuntu() {
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
   apt-get update
-  apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen
+  apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen curl
 
   curl -s "https://labs.consol.de/repo/testing/RPM-GPG-KEY" | apt-key add -
   echo "deb http://labs.consol.de/repo/testing/ubuntu $(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d'=' -f2) main" >> /etc/apt/sources.list
