@@ -63,7 +63,7 @@ function install_omd_debian() {
   apt-get update
   apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen
 
-  gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys F8C1CA08A57B9ED7 && gpg --armor --export F8C1CA08A57B9ED7 | apt-key add -
+  curl -s "https://labs.consol.de/repo/testing/RPM-GPG-KEY" | apt-key add -
   echo "deb http://labs.consol.de/repo/testing/debian $(cat /etc/os-release  | grep 'VERSION=' | tr '(' ')' | cut -d ')' -f2) main" > /etc/apt/sources.list.d/labs-consol-testing.list
   apt-get update
   apt-get install -y omd-labs-edition-daily
@@ -87,7 +87,7 @@ function install_omd_ubuntu() {
   apt-get update
   apt-get install -y lsof vim git openssh-server tree tcpdump libevent-2.0-5 file make sudo lsyncd screen
 
-  gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys F8C1CA08A57B9ED7 && gpg --armor --export F8C1CA08A57B9ED7 | apt-key add -
+  curl -s "https://labs.consol.de/repo/testing/RPM-GPG-KEY" | apt-key add -
   echo "deb http://labs.consol.de/repo/testing/ubuntu $(cat /etc/lsb-release | grep DISTRIB_CODENAME | cut -d'=' -f2) main" >> /etc/apt/sources.list
   apt-get update
   apt-get install -y omd-labs-edition-daily
