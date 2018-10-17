@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER Simon Meggle<simon.meggle@consol.de>
+MAINTAINER Sven Nierlein<sven.nierlein@consol.de>
 EXPOSE 80 443 22 4730 5666
 
 ENV REFRESHED 20180327
