@@ -2,7 +2,8 @@
 
 OMD "Labs" Edition (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
 
-Author: Simon Meggle, *simon.meggle at consol.de*
+Author: Sven Nierlein, *sven.nierlein at consol.de*
+Author: Simon Meggle
 
 ## Automated builds, branches & tags
 
