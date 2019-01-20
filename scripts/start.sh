@@ -84,7 +84,8 @@ echo
 
 echo "crond: Starting ..."
 echo "--------------------------------------"
-crond
+test -x /usr/sbin/crond && /usr/sbin/crond
+test -x /usr/sbin/cron  && /usr/sbin/cron
 
 echo
 
