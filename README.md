@@ -231,6 +231,24 @@ Just a folder containing a valid playbook into the container:
 
     docker run -it -p 8443:443 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
 
+
+### Login & Password
+
+When starting the container, OMD will create a random default password for the omdadmin user.
+There are several ways to handle this:
+
+1. using the data volume will bring your own htpasswd file
+2. set your default omdadmin password per ansbible dropin, ex. like:
+
+playbook.yml:
+```
+---
+- hosts: all
+  tasks:
+  - shell: sudo su - demo -c "set_admin_password omd"
+```
+
+
 ### Debugging
 
 If you want to see more verbose output from Ansible to debug your role, adjust the environment variable value [`ANSIBLE_VERBOSITY`](http://docs.ansible.com/ansible/latest/debug_module.html) to e.g. `3`:
