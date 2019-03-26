@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # install common packages
 
+# script must fail on errors, otherwise build would just continue and result in a broker image
+set -e
+
 function main() {
   case $1 in
     centos) install_common_centos;;
@@ -13,7 +16,7 @@ function main() {
 function install_common_centos() {
   pushd /tmp
   rpm -Uvh "http://ftp.uni-stuttgart.de/epel/epel-release-latest-7.noarch.rpm"
-  yum clean all 
+  yum clean all
   yum -y update
   yum -y install which lsof vim git openssh-server tree file make sudo lsyncd unzip screen
   popd

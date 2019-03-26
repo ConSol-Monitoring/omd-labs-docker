@@ -2,6 +2,8 @@
 # $1 = OS
 # $2 = OMD version (master/latest/vX.XX)
 
+# script must fail on errors, otherwise build would just continue and result in a broker image
+set -e
 
 function main() {
   case $1 in
