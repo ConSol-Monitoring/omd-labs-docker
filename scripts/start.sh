@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-export OMD_ROOT=/opt/omd/sites/$SITENAME
 source /root/.sitename.env
+export OMD_ROOT=/opt/omd/sites/$SITENAME
 
 echo "Config and start OMD site: $SITENAME"
 echo "--------------------------------------"
