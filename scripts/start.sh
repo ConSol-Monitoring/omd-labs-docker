@@ -79,7 +79,7 @@ if [ -r "$ANSIBLE_DROPIN/playbook.yml" ]; then
     mkdir -p /etc/ansible
     echo -e "[defaults]\ngather_timeout = 30" > /etc/ansible/ansible.cfg
   }
-  /omd/versions/default/bin/ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local -e SITENAME=$SITENAME || exit 1
+  ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local -e 'ansible_python_interpreter=/usr/bin/python2' -e SITENAME=$SITENAME || exit 1
 else
   echo "Nothing to do ($ANSIBLE_DROPIN/playbook.yml not found)."
 fi
