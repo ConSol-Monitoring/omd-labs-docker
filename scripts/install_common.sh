@@ -20,7 +20,7 @@ function install_common_centos() {
   yum config-manager --set-enabled PowerTools
   yum clean all
   yum -y update
-  yum -y install which lsof vim git openssh-server tree file make sudo wget unzip screen
+  yum -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible
   # HACK: lsyncd is not available on centos 8 so far, using the one from centos 7 seems to work fine
   wget "http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/lsyncd-2.2.2-1.el7.x86_64.rpm"
   yum -y install lsyncd-2.2.2-1.el7.x86_64.rpm
@@ -38,7 +38,7 @@ function install_common_debian() {
   echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
-  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd screen curl gnupg2 lsb-release
+  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd screen curl gnupg2 lsb-release ansible
 
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }

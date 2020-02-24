@@ -21,7 +21,6 @@ RUN $HOME/install_omd.sh debian $OMD_VERSION
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
 ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
-ENV PYTHONPATH=/omd/versions/default/lib/python/
 ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
 ENV ANSIBLE_VERBOSITY=0
 
