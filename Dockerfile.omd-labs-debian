@@ -1,8 +1,8 @@
-FROM debian:8
+FROM debian:10
 MAINTAINER Sven Nierlein<sven.nierlein@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20181017
+ENV REFRESHED 20200224
 
 #### user environment ######################################
 ENV HOME=/root

@@ -27,7 +27,7 @@ export SOURCE_BRANCH=$(BRANCH)
 .PHONY: build bash start echo
 
 build:
-  # the hook is also executed on Docker Hub
+	# the hook is also executed on Docker Hub
 	./hooks/build $(BUILDARGS)
 	@echo "Successfully built" $(IMAGE)
 start:
