@@ -27,11 +27,11 @@ Each image already contains a "demo" site.
 
 Run the "demo" site in OMD Labs Edition:
 
-    # Centos 7
+    # Centos 8
     docker run -p 8443:443 consol/omd-labs-centos
-    # Ubuntu 16.04
+    # Ubuntu 18.04
     docker run -p 8443:443 consol/omd-labs-ubuntu
-    # Debian 8
+    # Debian 10
     docker run -p 8443:443 consol/omd-labs-debian
 
 Use the Makefile to work with *locally built* images:
