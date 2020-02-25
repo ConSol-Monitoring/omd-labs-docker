@@ -101,6 +101,6 @@ echo
 
 echo "omd-labs: Starting Apache web server..."
 echo "--------------------------------------"
-
+test -x /usr/libexec/httpd-ssl-gencerts && /usr/libexec/httpd-ssl-gencerts
 $APACHE_CMD &
 wait
