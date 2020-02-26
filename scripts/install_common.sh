@@ -25,7 +25,7 @@ function install_common_centos() {
   wget "http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/l/lsyncd-2.2.2-1.el7.x86_64.rpm"
   yum -y install lsyncd-2.2.2-1.el7.x86_64.rpm
   # install missing dependencies, should be come along with next omd release
-  yum -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced
+  yum -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
   popd
 }
 
