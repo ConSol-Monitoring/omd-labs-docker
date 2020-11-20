@@ -23,6 +23,7 @@ function install_common_centos() {
   yum -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd
   # install missing dependencies, should be come along with next omd release
   yum -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
+  yum -y install glibc-langpack-en # required for locale en_US.UTF-8
   popd
 }
 
