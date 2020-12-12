@@ -15,15 +15,17 @@ function main() {
 
 function install_common_centos() {
   pushd /tmp
-  yum -y install epel-release
-  yum -y install 'dnf-command(config-manager)'
-  yum config-manager --set-enabled PowerTools
-  yum clean all
-  yum -y update
-  yum -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd
+  dnf -y install centos-release-stream
+  dnf -y distro-sync
+  dnf -y install epel-release
+  dnf -y install 'dnf-command(config-manager)'
+  dnf config-manager --set-enabled powertools
+  dnf clean all
+  dnf -y update
+  dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd
   # install missing dependencies, should be come along with next omd release
-  yum -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
-  yum -y install glibc-langpack-en # required for locale en_US.UTF-8
+  dnf -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
+  dnf -y install glibc-langpack-en # required for locale en_US.UTF-8
   popd
 }
 
