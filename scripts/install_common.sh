@@ -16,6 +16,7 @@ function main() {
 function install_common_centos() {
   pushd /tmp
   dnf -y install centos-release-stream
+  dnf -y swap centos-{linux,stream}-repos
   dnf -y distro-sync
   dnf -y install epel-release
   dnf -y install 'dnf-command(config-manager)'
