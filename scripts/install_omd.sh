@@ -31,13 +31,12 @@ function pkgName() {
       echo "omd-labs-edition"
       ;;
     *)
-      echo "omd-${STR}-labs-edition"
+      echo "omd-${1}-labs-edition"
       ;;
   esac
 }
 
 function repoVersion() {
-  STR=${STR#v}
   if [ "x$1" == "xlatest" ] || [[ "x$1" =~ [0-9].[0-9]{2} ]]; then
     echo "stable"
   else
