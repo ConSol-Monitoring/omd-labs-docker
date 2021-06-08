@@ -24,9 +24,8 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: set version from branch
-        shell: bash
-        run: echo "::set-env name=BRANCH_NAME::$(echo ${GITHUB_REF#refs/heads/} | sed 's/^v//g')"
+      - run: npm ci
+      - uses: nelonoel/branch-name@v1.0.1
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
         with:
@@ -43,12 +42,12 @@ jobs:
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
-          build-args: OMD_VERSION=${{ env.BRANCH_NAME }}
-          tags: consol/${{ matrix.target }}:${{ env.BRANCH_NAME }}
+          build-args: OMD_VERSION=${BRANCH_NAME}
+          tags: consol/${{ matrix.target }}:${BRANCH_NAME}
       - name: Build container image
         uses: docker/build-push-action@v2
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: docker.pkg.github.com/consol/omd-labs-docker/${{ matrix.target }}:${{ env.BRANCH_NAME }}
+          tags: docker.pkg.github.com/consol/omd-labs-docker/${{ matrix.target }}:${BRANCH_NAME}
