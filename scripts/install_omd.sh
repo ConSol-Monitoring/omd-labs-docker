@@ -2,12 +2,16 @@
 # $1 = OS
 # $2 = OMD version (master/latest/vX.XX)
 
-# script must fail on errors, otherwise build would just continue and result in a broker image
+# script must fail on errors, otherwise build would just continue and result in a broken image
 set -e
+
+BRANCH=$2
+BRANCH=${BRANCH#refs/heads/}
+BRANCH=${BRANCH#v}
 
 function main() {
   case $1 in
-    centos) install_omd_centos $1 $2;;
+    centos) install_omd_centos $1 $BRANCH;;
     debian) install_omd_debian $2;;
     ubuntu) install_omd_ubuntu $2;;
     *) { echo "$1: Unknown OS type!"; exit 1; }
@@ -18,13 +22,8 @@ function main() {
 }
 
 function pkgName() {
-  STR=$1
-  STR=${STR#refs/heads/}
-  case $STR in
+  case $1 in
     "master")
-      echo "omd-labs-edition-daily"
-      ;;
-    "github_actions")
       echo "omd-labs-edition-daily"
       ;;
     "latest")
@@ -37,9 +36,8 @@ function pkgName() {
 }
 
 function repoVersion() {
-  STR=$1
-  STR=${STR#refs/heads/}
-  if [ "x$STR" == "xlatest" ] || [[ "x$STR" =~ [0-9].[0-9]{2} ]]; then
+  STR=${STR#v}
+  if [ "x$1" == "xlatest" ] || [[ "x$1" =~ [0-9].[0-9]{2} ]]; then
     echo "stable"
   else
     echo "testing"
