@@ -5,15 +5,15 @@
 # script must fail on errors, otherwise build would just continue and result in a broken image
 set -e
 
-BRANCH=$2
-BRANCH=${BRANCH#refs/heads/}
-BRANCH=${BRANCH#v}
-
 function main() {
+  BRANCH=$2
+  BRANCH=${BRANCH#refs/heads/}
+  BRANCH=${BRANCH#v}
+
   case $1 in
     centos) install_omd_centos $1 $BRANCH;;
-    debian) install_omd_debian $2;;
-    ubuntu) install_omd_ubuntu $2;;
+    debian) install_omd_debian $BRANCH;;
+    ubuntu) install_omd_ubuntu $BRANCH;;
     *) { echo "$1: Unknown OS type!"; exit 1; }
   esac
 
