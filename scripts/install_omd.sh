@@ -18,22 +18,28 @@ function main() {
 }
 
 function pkgName() {
-  REPOVERSION=$1
-  case $1 in
+  STR=$1
+  STR=${STR#refs/heads/}
+  case $STR in
     "master")
+      echo "omd-labs-edition-daily"
+      ;;
+    "github_actions")
       echo "omd-labs-edition-daily"
       ;;
     "latest")
       echo "omd-labs-edition"
       ;;
     *)
-      echo "omd-${1}-labs-edition"
+      echo "omd-${STR}-labs-edition"
       ;;
   esac
 }
 
 function repoVersion() {
-  if [ "x$1" == "xlatest" ] || [[ "x$1" =~ [0-9].[0-9]{2} ]]; then
+  STR=$1
+  STR=${STR#refs/heads/}
+  if [ "x$STR" == "xlatest" ] || [[ "x$STR" =~ [0-9].[0-9]{2} ]]; then
     echo "stable"
   else
     echo "testing"
