@@ -4,6 +4,7 @@
 
 # script must fail on errors, otherwise build would just continue and result in a broken image
 set -e
+set -x
 
 function main() {
   BRANCH=$2
