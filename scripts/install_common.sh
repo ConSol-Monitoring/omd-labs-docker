@@ -15,12 +15,7 @@ function main() {
 
 function install_common_centos() {
   pushd /tmp
-  dnf -y install centos-release-stream
-  dnf -y swap centos-{linux,stream}-repos
-  dnf -y distro-sync
   dnf -y install epel-release
-  dnf -y install 'dnf-command(config-manager)'
-  dnf config-manager --set-enabled powertools
   dnf clean all
   dnf -y update
   dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd
