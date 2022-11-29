@@ -17,7 +17,7 @@ function install_common_centos() {
   pushd /tmp
   dnf -y install dnf-plugins-core
   dnf -y install epel-release
-  dnf config-manager --set-enabled powertools
+  dnf config-manager --set-enabled crb
   dnf clean all
   dnf -y update
   dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd

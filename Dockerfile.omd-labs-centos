@@ -1,8 +1,8 @@
-FROM rockylinux:8
+FROM rockylinux:9
 MAINTAINER Sven Nierlein<sven.nierlein@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20220201
+ENV REFRESHED 20221129
 
 #### user environment ######################################
 ENV HOME=/root
