@@ -12,9 +12,8 @@ function main() {
   BRANCH=${BRANCH#v}
 
   case $1 in
-    centos) install_omd_centos $1 $BRANCH;;
+    rocky)  install_omd_rocky  $BRANCH;;
     debian) install_omd_debian $BRANCH;;
-    ubuntu) install_omd_ubuntu $BRANCH;;
     *) { echo "$1: Unknown OS type!"; exit 1; }
   esac
 
@@ -44,13 +43,12 @@ function repoVersion() {
   fi
 }
 
-function install_omd_centos() {
-  OS=$1
-  VERSION=$2
+function install_omd_rocky() {
+  VERSION=$1
   PACKAGENAME=`pkgName $VERSION`
   REPOVERSION=`repoVersion $VERSION`
 
-  rpm -Uvh "https://labs.consol.de/repo/${REPOVERSION}/rhel8/x86_64/labs-consol-${REPOVERSION}.rhel8.noarch.rpm"
+  rpm -Uvh "https://labs.consol.de/repo/${REPOVERSION}/rhel9/x86_64/labs-consol-${REPOVERSION}.rhel9.noarch.rpm"
   yum update
   yum -y install $PACKAGENAME
   test -f /usr/bin/ping && chmod +s /usr/bin/ping
@@ -71,20 +69,5 @@ function install_omd_debian() {
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }
 
-
-function install_omd_ubuntu() {
-  VERSION=$1
-  PACKAGENAME=`pkgName $VERSION`
-  REPOVERSION=`repoVersion $VERSION`
-  export DEBIAN_FRONTEND=noninteractive
-
-  curl -s "https://labs.consol.de/repo/${REPOVERSION}/RPM-GPG-KEY" | apt-key add -
-  echo "deb http://labs.consol.de/repo/${REPOVERSION}/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/labs-consol-${REPOVERSION}.list
-  apt-get update
-  apt-get install -y ${PACKAGENAME}
-  apt-get clean
-
-  rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-}
 
 main $@

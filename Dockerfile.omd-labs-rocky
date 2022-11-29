@@ -1,8 +1,8 @@
-FROM ubuntu:18.04
+FROM rockylinux:9
 MAINTAINER Sven Nierlein<sven.nierlein@consol.de>
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED 20200224
+ENV REFRESHED 20221129
 
 #### user environment ######################################
 ENV HOME=/root
@@ -15,8 +15,8 @@ ADD .screenrc $HOME
 ARG OMD_VERSION
 ADD ./scripts/install_*.sh $HOME/
 RUN chmod +x $HOME/install_*.sh
-RUN $HOME/install_common.sh ubuntu
-RUN $HOME/install_omd.sh ubuntu $OMD_VERSION
+RUN $HOME/install_common.sh rocky
+RUN $HOME/install_omd.sh rocky $OMD_VERSION
 
 #### ansible ################################################
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
@@ -46,5 +46,5 @@ ONBUILD ARG NEW_SITENAME=demo
 ONBUILD ENV NEW_SITENAME=$NEW_SITENAME
 ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "export SITENAME=$NEW_SITENAME" > .sitename.env && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
 
-ENV APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
+ENV APACHE_CMD="exec /usr/sbin/apachectl -D FOREGROUND"
 CMD ["/root/start.sh"]

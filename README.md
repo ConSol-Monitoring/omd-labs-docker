@@ -1,17 +1,17 @@
 # omd-labs-docker
 
-OMD "Labs" Edition (https://labs.consol.de/de/omd/index.html) on Docker with Ansible support.
+OMD "Labs" Edition (https://labs.consol.de/de/omd/) on Docker with Ansible support.
 
 Author: Sven Nierlein, *sven.nierlein at consol.de*
-Author: Simon Meggle
+
+Original Author: Simon Meggle
 
 ## Automated builds, branches & tags
 
 Each image build gets triggered by the OMD Labs build system as soon as there are new packages of OMD available:
 
-* https://hub.docker.com/r/consol/omd-labs-centos/
+* https://hub.docker.com/r/consol/omd-labs-rocky/
 * https://hub.docker.com/r/consol/omd-labs-debian/
-* https://hub.docker.com/r/consol/omd-labs-ubuntu/
 
 Automated builds are triggered for the following branches:
 
@@ -27,21 +27,19 @@ Each image already contains a "demo" site.
 
 Run the "demo" site in OMD Labs Edition:
 
-    # Centos 8
-    docker run -p 8443:443 consol/omd-labs-centos
-    # Ubuntu 18.04
-    docker run -p 8443:443 consol/omd-labs-ubuntu
-    # Debian 10
+    # Rocky 9
+    docker run -p 8443:443 consol/omd-labs-rocky
+    # Debian 11
     docker run -p 8443:443 consol/omd-labs-debian
 
 Use the Makefile to work with *locally built* images:
 
     # run a local image
-    make -f Makefile.omd-labs-centos start
+    make -f Makefile.omd-labs-rocky start
     # build a "local/" image without overwriting the consol/ image
-    make -f Makefile.omd-labs-centos build
+    make -f Makefile.omd-labs-rocky build
     # start just the bash
-    make -f Makefile.omd-labs-centos bash
+    make -f Makefile.omd-labs-rocky bash
 
 The container will log its startup process:
 
@@ -76,10 +74,10 @@ Notice the section "Data volume check". In this case there were no host mounted 
 #### Change the default sitename
 The *default sitename* "demo" can be changed. Build a custom image while `SITENAME` is set:
 
-* clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-centos`
+* clone this repository, `cd` into the folder containg the Dockerfile, e.g. `omd-labs-rocky`
 * build a local image:
 ```
-export SITENAME=mynewsite; make -f Makefile.omd-labs-centos build    
+export SITENAME=mynewsite; make -f Makefile.omd-labs-rocky build
 ```
 
 Each container instance of this image will start the site "mynewsite" instead of "demo".
@@ -89,7 +87,7 @@ Each container instance of this image will start the site "mynewsite" instead of
 If you need to set the *sitename dynamically* without building the whole image from scratch (see above), you can create images with another OMD-site beneath the default site (see above). Create a custom `Dockerfile` which uses the original image as the base image:
 
 ```
-FROM: consol/omd-labs-centos:nightly
+FROM: consol/omd-labs-rocky:nightly
 ...
 ...
 ```
@@ -110,7 +108,7 @@ As soon as the container dies, all monitoring data (configuration files, RRD dat
 
 This command
 
-      make -f Makefile.omd-labs-centos startvol
+      make -f Makefile.omd-labs-rocky startvol
 
 starts the container with three volume mounts:
 
@@ -177,7 +175,7 @@ docker run -d -p 8443:443 \
   -e VOL_VAR_MB_MIN=700000  \
   -e VOL_ETC_MB_MIN=500     \
   -e VOL_LOCAL_MB_MIN=6000  \
-  consol/omd-labs-centos:nightly
+  consol/omd-labs-rocky:nightly
 
 docker logs 91992828cc1dca7839cb2842933897b94329fe2c6b395c5ccb8b9fa056057679
 Config and start OMD site: demo

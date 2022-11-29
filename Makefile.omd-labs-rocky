@@ -3,7 +3,7 @@
 # Branch 'master' leads to no tag (=latest),
 # others to "local/[dirname]:[branchname]
 
-DISTRO=ubuntu
+DISTRO=rocky
 
 # local builds will be named like this
 REPO = local/omd-labs-$(DISTRO)
