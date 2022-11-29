@@ -19,9 +19,8 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - omd-labs-centos
+          - omd-labs-rocky
           - omd-labs-debian
-          - omd-labs-ubuntu
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3

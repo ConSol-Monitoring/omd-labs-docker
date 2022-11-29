@@ -6,14 +6,13 @@ set -e
 
 function main() {
   case $1 in
-    centos) install_common_centos;;
+    rocky)  install_common_rocky;;
     debian) install_common_debian;;
-    ubuntu) install_common_debian;;
     *) { echo "$1: Unknown OS type!"; exit 1; }
   esac
 }
 
-function install_common_centos() {
+function install_common_rocky() {
   pushd /tmp
   dnf -y install dnf-plugins-core
   dnf -y install epel-release
