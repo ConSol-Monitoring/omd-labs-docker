@@ -19,7 +19,7 @@ function install_common_rocky() {
   dnf config-manager --set-enabled crb
   dnf clean all
   dnf -y update
-  dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible lsyncd
+  dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible-core lsyncd
   # install missing dependencies, should be come along with next omd release
   dnf -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
   dnf -y install glibc-langpack-en # required for locale en_US.UTF-8
