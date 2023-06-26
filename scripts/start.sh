@@ -75,10 +75,6 @@ echo "Checking for Ansible drop-in..."
 echo "--------------------------------------"
 if [ -r "$ANSIBLE_DROPIN/playbook.yml" ]; then
   echo "Executing Ansible drop-in..."
-  test -e /etc/ansible/ansible.cfg || {
-    mkdir -p /etc/ansible
-    echo -e "[defaults]\ngather_timeout = 30" > /etc/ansible/ansible.cfg
-  }
   ansible-playbook -i localhost, "$ANSIBLE_DROPIN/playbook.yml" -c local -e SITENAME=$SITENAME || exit 1
 else
   echo "Nothing to do ($ANSIBLE_DROPIN/playbook.yml not found)."
