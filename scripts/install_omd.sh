@@ -19,10 +19,6 @@ function main() {
 
   # Logrotate settings
   find /omd/versions/default/skel/etc/logrotate.d -type f -exec sed -i 's/rotate [0-9]*/rotate 0/' {} \;
-
-  # Ansible settings
-  mkdir -p /etc/ansible
-  echo -e "[defaults]\ngather_timeout = 30\n" > /etc/ansible/ansible.cfg
 }
 
 function pkgName() {

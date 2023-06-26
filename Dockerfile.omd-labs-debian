@@ -19,6 +19,7 @@ RUN $HOME/install_common.sh debian
 RUN $HOME/install_omd.sh debian $OMD_VERSION
 
 #### ansible ################################################
+COPY ansible_dropin/ansible.cfg root/ansible_dropin/ansible.cfg
 ARG ANSIBLE_DROPIN=$HOME/ansible_dropin
 ENV ANSIBLE_DROPIN=$ANSIBLE_DROPIN
 ENV ANSIBLE_CONFIG=${ANSIBLE_DROPIN}/ansible.cfg
