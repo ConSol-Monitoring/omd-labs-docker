@@ -32,7 +32,7 @@ jobs:
       - name: Log in to GitHub Docker Registry
         uses: docker/login-action@v2
         with:
-          registry: docker.pkg.github.com
+          registry: ghcr.io
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
       - name: Push to Docker Hub
@@ -48,4 +48,4 @@ jobs:
           push: true
           file: Dockerfile.${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: docker.pkg.github.com/consol/omd-labs-docker/${{ matrix.target }}:nightly
+          tags: ghcr.io/consol/omd-labs-docker/${{ matrix.target }}:nightly
