@@ -22,7 +22,7 @@ jobs:
           - omd-labs-debian
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - uses: nelonoel/branch-name@v1.0.1
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
