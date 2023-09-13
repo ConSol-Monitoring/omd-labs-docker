@@ -36,14 +36,14 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
           build-args: OMD_VERSION=${{ env.BRANCH_NAME }}
           tags: consol/${{ matrix.target }}:${{ env.BRANCH_NAME }}
       - name: Build container image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
