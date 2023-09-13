@@ -32,6 +32,10 @@ function install_common_debian() {
   apt-get update
   apt-get install -y procps
 
+  apt-get install -y locales
+  sed -i -r '/de_DE|en_US/s/^# *//' /etc/locale.gen
+  dpkg-reconfigure --frontend=noninteractive locales
+
   echo 'net.ipv6.conf.default.disable_ipv6 = 1' > /etc/sysctl.d/20-ipv6-disable.conf
   echo 'net.ipv6.conf.all.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
   echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
