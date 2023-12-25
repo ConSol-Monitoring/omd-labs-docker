@@ -26,6 +26,9 @@ function pkgName() {
     "master")
       echo "omd-labs-edition-daily"
       ;;
+    "arm64test")
+      echo "omd-labs-edition-daily"
+      ;;
     "latest")
       echo "omd-labs-edition"
       ;;
