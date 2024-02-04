@@ -10,8 +10,8 @@ Original Author: Simon Meggle
 
 Each image build gets triggered by the OMD Labs build system as soon as there are new packages of OMD available:
 
-* https://hub.docker.com/r/consol/omd-labs-rocky/
-* https://hub.docker.com/r/consol/omd-labs-debian/
+* https://hub.docker.com/r/consol/omd-labs-rocky/  (x86 / arm64)
+* https://hub.docker.com/r/consol/omd-labs-debian/ (x86 / arm64)
 
 Automated builds are triggered for the following branches:
 
