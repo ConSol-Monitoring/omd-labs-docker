@@ -47,7 +47,7 @@ jobs:
           build-args: OMD_VERSION=${{ env.BRANCH_NAME }}
           tags: consol/${{ matrix.target }}:${{ env.BRANCH_NAME }}
           platforms: linux/amd64,linux/arm64
-      - name: Build container image
+      - name: Build/Push to github.com
         uses: docker/build-push-action@v5
         with:
           push: true

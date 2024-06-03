@@ -15,6 +15,7 @@ trap "omd stop $SITENAME; exit 0" SIGKILL SIGTERM SIGHUP SIGINT
 
 echo "Checking for volume mounts..."
 echo "--------------------------------------"
+cat /dev/null > $OMD_ROOT/.lsyncd
 for dir in "local" "etc" "var"; do
   d_local="$OMD_ROOT/$dir"
   d_mount="$OMD_ROOT/${dir}.mount"
