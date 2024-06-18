@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
       - name: Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
@@ -47,7 +47,7 @@ jobs:
           tags: consol/${{ matrix.target }}:latest
           platforms: linux/amd64,linux/arm64
       - name: Build container image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
