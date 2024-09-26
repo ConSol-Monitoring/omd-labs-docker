@@ -1,4 +1,0 @@
-hardstatus alwayslastline
-hardstatus string '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
-bindkey -k k5 prev # F5 for previous window
-bindkey -k k6 next # F6 for next window

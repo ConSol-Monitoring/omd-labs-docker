@@ -10,7 +10,6 @@ ENV HOME=/root
 WORKDIR $HOME
 ADD ./scripts/start.sh $HOME
 RUN chmod +x $HOME/start.sh
-ADD .screenrc $HOME
 
 ### OMD installation ######################################
 ARG OMD_VERSION
