@@ -1,10 +1,13 @@
 # omd-labs-docker
 
-OMD "Labs" Edition (https://labs.consol.de/de/omd/) on Docker with Ansible support.
+OMD "Labs" Edition (https://omd.consol.de/docs/omd/) on Docker with Ansible support.
 
 Author: Sven Nierlein, *sven.nierlein at consol.de*
 
 Original Author: Simon Meggle
+
+- https://omd.consol.de/docs/omd/
+- https://github.com/ConSol-Monitoring/omd-labs-docker
 
 ## Automated builds, branches & tags
 
