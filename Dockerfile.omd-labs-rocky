@@ -3,7 +3,7 @@ LABEL org.opencontainers.image.authors="sven.nierlein@consol.de"
 LABEL org.opencontainers.image.source="https://github.com/ConSol-Monitoring/omd-labs-docker"
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED=20240809
+ENV REFRESHED=20250123
 
 #### user environment ######################################
 ENV HOME=/root
