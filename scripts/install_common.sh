@@ -41,15 +41,7 @@ function install_common_debian() {
   echo 'net.ipv6.conf.lo.disable_ipv6 = 1' >> /etc/sysctl.d/20-ipv6-disable.conf
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
-set +e
-set -x
-apt-get install -y python3
-type python3.11
-python3.11 -VV
-python3.11 -c 'import imp; print(imp.get_tag())'
-set +x
-set +e
-
+  apt-get install -y python3
   apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd screen curl gnupg2 lsb-release ansible
 
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
