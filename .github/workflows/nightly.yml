@@ -10,7 +10,7 @@ on:
 
 jobs:
   push_to_registries:
-    name: Push Docker image to github and dockerhub
+    name: Docker nightly
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -21,6 +21,9 @@ jobs:
         target:
           - omd-labs-rocky
           - omd-labs-debian
+        platform:
+          - linux/amd64
+          - linux/arm64
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -39,19 +42,19 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
-      - name: Push to Docker Hub
+      - name: Build to hub.docker.com
         uses: docker/build-push-action@v6
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
           tags: consol/${{ matrix.target }}:nightly
-          platforms: linux/amd64,linux/arm64
-      - name: Build container image
+          platforms: ${{ matrix.platform }}
+      - name: Build to ghcr.io
         uses: docker/build-push-action@v6
         with:
           push: true
           file: Dockerfile.${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
           tags: ghcr.io/consol/omd-labs-docker/${{ matrix.target }}:nightly
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.platform }}
