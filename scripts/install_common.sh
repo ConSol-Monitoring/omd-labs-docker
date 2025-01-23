@@ -42,7 +42,10 @@ function install_common_debian() {
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
   apt-get install -y python3
-  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd screen curl gnupg2 lsb-release ansible
+  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd curl gnupg2 lsb-release
+  set -e
+  apt-get install -y ansible
+  set +e
 
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }
