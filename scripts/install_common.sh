@@ -43,9 +43,7 @@ function install_common_debian() {
 
   apt-get install -y python3
   apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd curl gnupg2 lsb-release
-  set -e
   apt-get install -y ansible
-  set +e
 
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 }

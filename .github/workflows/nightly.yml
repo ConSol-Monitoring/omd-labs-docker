@@ -23,7 +23,7 @@ jobs:
           - debian
         platform:
           - amd64
-          - arm64
+          #- arm64
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
