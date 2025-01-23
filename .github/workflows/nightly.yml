@@ -10,7 +10,7 @@ on:
 
 jobs:
   push_to_registries:
-    name: Docker nightly
+    name: docker
     runs-on: ubuntu-latest
     permissions:
       packages: write

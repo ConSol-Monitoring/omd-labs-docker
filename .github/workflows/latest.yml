@@ -6,10 +6,11 @@ on:
       - latest
     tags-ignore:
       - '*'
+  workflow_dispatch:
 
 jobs:
   push_to_registries:
-    name: Push Docker image to github and dockerhub
+    name: docker
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -18,8 +19,11 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - omd-labs-rocky
-          - omd-labs-debian
+          - rocky
+          - debian
+        platform:
+          - amd64
+          - arm64
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -38,19 +42,19 @@ jobs:
           registry: ghcr.io
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
-      - name: Push to Docker Hub
+      - name: Build to hub.docker.com
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.${{ matrix.target }}
+          file: Dockerfile.omd-labs-${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: consol/${{ matrix.target }}:latest
-          platforms: linux/amd64,linux/arm64
-      - name: Build container image
+          tags: consol/omd-labs-${{ matrix.target }}:latest
+          platforms: linux/${{ matrix.platform }}
+      - name: Build to ghcr.io
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.${{ matrix.target }}
+          file: Dockerfile.omd-labs-${{ matrix.target }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: ghcr.io/consol/omd-labs-docker/${{ matrix.target }}:latest
-          platforms: linux/amd64,linux/arm64
+          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.target }}:latest
+          platforms: linux/${{ matrix.platform }}
