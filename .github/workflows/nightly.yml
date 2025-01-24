@@ -11,7 +11,7 @@ on:
 jobs:
   docker_build:
     name: docker
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.target.runs }}
     permissions:
       packages: write
       contents: read
@@ -19,13 +19,18 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - rocky
-          - debian
-        include:
-          - os: ubuntu-24.04
+          - runs: ubuntu-24.04
             platform: amd64
-          - os: ubuntu-24.04-arm
+            os: rocky
+          - runs: ubuntu-24.04
+            platform: amd64
+            os: debian
+          - runs: ubuntu-24.04-arm
             platform: arm64
+            os: rocky
+          - runs: ubuntu-24.04-arm
+            platform: arm64
+            os: debian
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -47,16 +52,16 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.omd-labs-${{ matrix.target }}
+          file: Dockerfile.omd-labs-${{ matrix.target.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: consol/omd-labs-${{ matrix.target }}:nightly
-          platforms: linux/${{ matrix.platform }}
+          tags: consol/omd-labs-${{ matrix.target.os }}:nightly
+          platforms: linux/${{ matrix.target.platform }}
 
       - name: Build to ghcr.io
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.omd-labs-${{ matrix.target }}
+          file: Dockerfile.omd-labs-${{ matrix.target.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.target }}:nightly
-          platforms: linux/${{ matrix.platform }}
+          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.target.os }}:nightly
+          platforms: linux/${{ matrix.target.platform }}
