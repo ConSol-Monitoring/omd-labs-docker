@@ -18,19 +18,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os:
+          - rocky
+          - debian
         target:
           - runs: ubuntu-24.04
             platform: amd64
-            os: rocky
-          - runs: ubuntu-24.04
-            platform: amd64
-            os: debian
           - runs: ubuntu-24.04-arm
             platform: arm64
-            os: rocky
-          - runs: ubuntu-24.04-arm
-            platform: arm64
-            os: debian
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
@@ -52,9 +47,9 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.omd-labs-${{ matrix.target.os }}
+          file: Dockerfile.omd-labs-${{ matrix.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: consol/omd-labs-${{ matrix.target.os }}:nightly
+          tags: consol/omd-labs-${{ matrix.os }}:nightly
           platforms: linux/${{ matrix.target.platform }}
 
       - name: Build to ghcr.io
