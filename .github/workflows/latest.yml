@@ -56,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          file: Dockerfile.omd-labs-${{ matrix.target.os }}
+          file: Dockerfile.omd-labs-${{ matrix.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.target.os }}:latest
+          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:latest
           platforms: linux/${{ matrix.target.platform }}
