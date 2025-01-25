@@ -8,6 +8,10 @@ on:
       - '*'
   workflow_dispatch:
 
+# set docker tag for all steps
+env:
+  DOCKERTAG: nightly
+
 jobs:
   docker_build:
     runs-on: ${{ matrix.target.runs }}
@@ -48,7 +52,7 @@ jobs:
           push: true
           file: Dockerfile.omd-labs-${{ matrix.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: consol/omd-labs-${{ matrix.os }}:nightly-${{ matrix.target.platform }}
+          tags: consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
           platforms: linux/${{ matrix.target.platform }}
 
       - name: Build to ghcr.io
@@ -57,7 +61,7 @@ jobs:
           push: true
           file: Dockerfile.omd-labs-${{ matrix.os }}
           build-args: OMD_VERSION=${{ github.ref }}
-          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:nightly-${{ matrix.target.platform }}
+          tags: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
           platforms: linux/${{ matrix.target.platform }}
 
   manifest:
@@ -90,10 +94,10 @@ jobs:
 
       - name: push manifest to dockerhub
         run: |
-            docker manifest create consol/omd-labs-${{ matrix.os }} consol/omd-labs-${{ matrix.os }}-amd64 consol/omd-labs-${{ matrix.os }}-arm64
-            docker manifest push consol/omd-labs-${{ matrix.os }}
+            docker manifest create consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }} consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-amd64 consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-arm64
+            docker manifest push consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}
 
       - name: push manifest to github
         run: |
-            docker manifest create ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }} ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}-amd64 consol/omd-labs-${{ matrix.os }}-arm64
-            docker manifest push ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}
+            docker manifest create ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }} ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-amd64 consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-arm64
+            docker manifest push ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}
