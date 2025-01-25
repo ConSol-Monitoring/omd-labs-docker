@@ -68,6 +68,10 @@ jobs:
       contents: read
     strategy:
       fail-fast: false
+      matrix:
+        os:
+          - rocky
+          - debian
     steps:
       - uses: actions/checkout@v3
 
