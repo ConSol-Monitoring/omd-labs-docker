@@ -56,7 +56,7 @@ done
 
 echo
 
-if [ -f $OMD_ROOT/.lsyncd ]; then
+if [ -s $OMD_ROOT/.lsyncd ]; then
   echo "lsyncd: writing the global settings..."
   cat >>$OMD_ROOT/.lsyncd <<EOF
 settings {
