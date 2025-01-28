@@ -19,7 +19,7 @@ function install_common_rocky() {
   dnf config-manager --set-enabled crb
   dnf clean all
   dnf -y update
-  dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip screen ansible-core lsyncd
+  dnf -y install which lsof vim git openssh-server tree file make sudo wget unzip tmux ansible-core lsyncd
   # install missing dependencies, should be come along with next omd release
   dnf -y install boost-atomic boost-chrono perl-Module-Load perl-Text-Balanced perl-Thread-Queue
   dnf -y install glibc-langpack-en # required for locale en_US.UTF-8
@@ -42,7 +42,7 @@ function install_common_debian() {
   cat /etc/sysctl.d/20-ipv6-disable.conf; sysctl -p
 
   apt-get install -y python3
-  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo lsyncd curl gnupg2 lsb-release
+  apt-get install -y lsof vim git openssh-server tree tcpdump file make sudo tmux lsyncd curl gnupg2 lsb-release
   apt-get install -y ansible
 
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
