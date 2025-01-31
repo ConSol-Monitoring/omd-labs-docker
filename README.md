@@ -230,7 +230,7 @@ By default, the OMD-labs containers start with the CMD `/root/start.sh`. This sc
 
 Just a folder containing a valid playbook into the container:
 
-    docker run -it -p 8443:443 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
+    docker run -it -p 8443:443 -v $(pwd)/my_ansible_dropin:/root/ansible_dropin consol/omd-labs-debian
 
 
 ### Login & Password
@@ -254,4 +254,4 @@ playbook.yml:
 
 If you want to see more verbose output from Ansible to debug your role, adjust the environment variable value [`ANSIBLE_VERBOSITY`](http://docs.ansible.com/ansible/latest/debug_module.html) to e.g. `3`:
 
-    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY=3 -v $(pwd)/my_ansible_dropin:/root/ansible_drop consol/omd-labs-debian
+    docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY=3 -v $(pwd)/my_ansible_dropin:/root/ansible_dropin consol/omd-labs-debian
