@@ -60,8 +60,8 @@ function install_omd_debian() {
   REPOVERSION=`repoVersion $VERSION`
 
   export DEBIAN_FRONTEND=noninteractive
-  curl -s "https://labs.consol.de/repo/stable/GPG-KEY-4096" -o /etc/apt/trusted.gpg.d/labs.consol.de-GPG-KEY-4096
-  curl -s "https://labs.consol.de/repo/stable/RPM-GPG-KEY"  -o /etc/apt/trusted.gpg.d/labs.consol.de-RPM-GPG-KEY
+  curl -s "https://labs.consol.de/repo/stable/GPG-KEY-4096" -o /etc/apt/trusted.gpg.d/labs.consol.de-GPG-KEY-4096.asc
+  curl -s "https://labs.consol.de/repo/stable/RPM-GPG-KEY"  -o /etc/apt/trusted.gpg.d/labs.consol.de-RPM-GPG-KEY.asc
   echo "deb http://labs.consol.de/repo/${REPOVERSION}/debian $(lsb_release -cs) main" > /etc/apt/sources.list.d/labs-consol-${REPOVERSION}.list
   apt-get update
   apt-get install -y ${PACKAGENAME}
