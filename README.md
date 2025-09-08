@@ -19,8 +19,8 @@ Each image build gets triggered by the OMD Labs build system as soon as there ar
 Automated builds are triggered for the following branches:
 
 * *master* => **:nightly** (=snapshot builds)
-* *vX.XX* => **:vX.XX** (=stable version)
-* *latest* => **:latest** (=latest stable version)
+* *vX.XX*  => **:vX.XX**   (=stable version)
+* *latest* => **:latest**  (=latest stable version)
 
 Each image already contains a "demo" site.
 
@@ -32,7 +32,7 @@ Run the "demo" site in OMD Labs Edition:
 
     # Rocky 9
     docker run -p 8443:443 consol/omd-labs-rocky
-    # Debian 11
+    # Debian 13
     docker run -p 8443:443 consol/omd-labs-debian
 
 Use the Makefile to work with *locally built* images:
@@ -115,16 +115,16 @@ This command
 
 starts the container with three volume mounts:
 
-* `./site/etc` => `$OMD_ROOT/etc.mount`
+* `./site/etc`   => `$OMD_ROOT/etc.mount`
 * `./site/local` => `$OMD_ROOT/local.mount`
-* `./site/var` => `$OMD_ROOT/var.mount`
+* `./site/var`   => `$OMD_ROOT/var.mount`
 
 On the very first start, this folders will be created on the host file system.
 In that case, the `start.sh` synchronize ongoing through `lsycnd` the content into the volumes (`etc.mount`, `local.mount`, `var.mount`) from the original folders (`etc`, `local`, `var`):
 
-* `$OMD_ROOT/etc` => `$OMD_ROOT/etc.mount`
+* `$OMD_ROOT/etc`   => `$OMD_ROOT/etc.mount`
 * `$OMD_ROOT/local` => `$OMD_ROOT/local.mount`
-* `$OMD_ROOT/var` => `$OMD_ROOT/var.mount`
+* `$OMD_ROOT/var`   => `$OMD_ROOT/var.mount`
 
 
 ```

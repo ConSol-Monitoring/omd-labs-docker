@@ -1,9 +1,9 @@
-FROM debian:12
+FROM debian:13
 LABEL org.opencontainers.image.authors="sven.nierlein@consol.de"
 LABEL org.opencontainers.image.source="https://github.com/ConSol-Monitoring/omd-labs-docker"
 EXPOSE 80 443 22 4730 5666
 
-ENV REFRESHED=20250123
+ENV REFRESHED=20250908
 
 #### user environment ######################################
 ENV HOME=/root
@@ -40,12 +40,13 @@ ENV SITENAME=$SITENAME
 RUN echo "export SITENAME=$SITENAME" > .sitename.env
 RUN sed -i 's|echo "on"$|echo "off"|' /opt/omd/versions/default/lib/omd/hooks/TMPFS
 RUN echo "create OMD site: $SITENAME" && omd create -u 1000 -g 1000 $SITENAME
+RUN mkdir -p /omd/sites/$SITENAME/.ansible/tmp && chmod 700 /omd/sites/$SITENAME/.ansible/tmp
 
 # -- ONBUILD
 # when used as a base image, this instructions trigger the creation of another site if NEW_SITENAME is not `demo`
 ONBUILD ARG NEW_SITENAME=demo
 ONBUILD ENV NEW_SITENAME=$NEW_SITENAME
-ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "export SITENAME=$NEW_SITENAME" > .sitename.env && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME || true
+ONBUILD RUN [ "$NEW_SITENAME" != "demo" ] && echo "export SITENAME=$NEW_SITENAME" > .sitename.env && echo "CREATE new site:$NEW_SITENAME" && omd -f rm $SITENAME && omd create -u 1001 -g 1001 $NEW_SITENAME && mkdir -p /omd/sites/$NEW_SITENAME/.ansible/tmp && chmod 700 /omd/sites/$NEW_SITENAME/.ansible/tmp || true
 
 ENV APACHE_CMD="exec /usr/sbin/apache2ctl -D FOREGROUND"
 CMD ["/root/start.sh"]
