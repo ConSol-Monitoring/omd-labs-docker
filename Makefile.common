@@ -3,11 +3,11 @@
 # Branch 'master' leads to no tag (=latest),
 # others to "local/[dirname]:[branchname]
 
-DISTRO:=
-
-ifeq (,$(subst ",,$(DISTRO)))
+ifeq ($(strip $(DISTRO)),)
     $(error DISTRO must not be empty, use Makefile.omd-labs-* instead)
 endif
+
+LOCAL_HTTPS_PORT ?= 8443
 
 # local builds will be named like this
 REPO = local/omd-labs-$(DISTRO)
@@ -36,27 +36,22 @@ build:
 	@echo "Successfully built" $(IMAGE)
 
 start:
-	docker run -p 8443:443 -d $(IMAGE)
+	docker run -p $(LOCAL_HTTPS_PORT):443 -d $(IMAGE)
 
 startvol:
-	mkdir -p site/local
-	mkdir -p site/etc
-	mkdir -p site/var
-	docker run -d -p 8443:443             \
-	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local.mount \
-	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc.mount     \
-	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var.mount     \
+	mkdir -p site
+	docker run -d -p $(LOCAL_HTTPS_PORT):443             \
+	-v $(shell pwd)/site:/omd/sites/$(SITENAME) \
 	$(IMAGE)
 
 echo:
 	@echo $(IMAGE)
 
 bash:
-	docker run --rm -p 8443:443 -it $(IMAGE) /bin/bash
+	docker run --rm -p $(LOCAL_HTTPS_PORT):443 -it $(IMAGE) /bin/bash
 
 bashvol:
-	docker run --rm -p 8443:443 -it \
-	-v $(shell pwd)/site/local:/omd/sites/$(SITENAME)/local.mount \
-	-v $(shell pwd)/site/etc:/omd/sites/$(SITENAME)/etc.mount     \
-	-v $(shell pwd)/site/var:/omd/sites/$(SITENAME)/var.mount     \
+	docker run --rm -p $(LOCAL_HTTPS_PORT):443 -it \
+	-v $(shell pwd)/.:/src \
+	-v $(shell pwd)/site:/omd/sites/$(SITENAME) \
 	$(IMAGE) /bin/bash
