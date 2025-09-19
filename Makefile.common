@@ -52,6 +52,5 @@ bash:
 
 bashvol:
 	docker run --rm -p $(LOCAL_HTTPS_PORT):443 -it \
-	-v $(shell pwd)/.:/src \
 	-v $(shell pwd)/site:/omd/sites/$(SITENAME) \
 	$(IMAGE) /bin/bash
