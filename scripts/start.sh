@@ -6,7 +6,7 @@ echo "Config and start OMD site: $SITENAME"
 echo "--------------------------------------"
 
 _cleanup() {
-  [ -n $APACHE_PID ] && kill $APACHE_PID
+  [ -n $APACHE_PID ] && kill $APACHE_PID >/dev/null 2>&1
   omd stop $SITENAME
   exit 0
 }
