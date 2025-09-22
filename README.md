@@ -55,9 +55,11 @@ Config and start OMD site: demo
 --------------------------------------
 Checking for volume mounts...
 --------------------------------------
- * local/: [No Volume]
- * etc/: [No Volume]
- * var/: [No Volume]
+ * demo/           [OK]
+ * demo/etc/       [OK]
+ * demo/var/       [OK]
+ * demo/local/     [OK]
+
 
 
 Checking for Ansible drop-in...
@@ -129,7 +131,7 @@ Note: previously 3 separate mounts were used for `local/`, `etc/` and `var/`. Th
 
 ## Ansible drop-ins
 
-For some time OMD-Labs comes with **full Ansible support**, which we can use to modify the container instance *on startup*. **How does this work?**
+OMD-Labs comes with **full Ansible support**, which we can use to modify the container instance *on startup*.
 
 ### Start Sequence
 
