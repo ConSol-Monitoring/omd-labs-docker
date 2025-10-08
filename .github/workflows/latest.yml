@@ -51,7 +51,9 @@ jobs:
         with:
           push: true
           file: Dockerfile.omd-labs-${{ matrix.os }}
-          build-args: OMD_VERSION=${{ github.ref }}
+          build-args:
+            OMD_VERSION=${{ github.ref }}
+            INSTALL_COMMON_RETRIES=3
           tags: |
             consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
             ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
