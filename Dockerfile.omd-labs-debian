@@ -14,7 +14,6 @@ RUN chmod +x $HOME/start.sh
 ### OMD installation ######################################
 ARG OMD_VERSION
 ARG INSTALL_COMMON_RETRIES=1
-ENV INSTALL_COMMON_RETRIES=$INSTALL_COMMON_RETRIES
 ADD ./scripts/install_*.sh $HOME/
 RUN chmod +x $HOME/install_*.sh
 RUN $HOME/install_retry.sh -r $INSTALL_COMMON_RETRIES -d 30 -- $HOME/install_common.sh debian
