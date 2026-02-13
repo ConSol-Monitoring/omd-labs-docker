@@ -59,7 +59,6 @@ jobs:
             ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
           platforms: linux/${{ matrix.target.platform }}
 
-
   manifest:
     runs-on: ubuntu-24.04
     needs: docker_build
@@ -72,32 +71,32 @@ jobs:
         os:
           - rocky
           - debian
-        registry:
-          - name: dockerhub
-            image: consol/omd-labs-${{ matrix.os }}
-            login:
-              uses: docker/login-action@v3
-              with:
-                username: ${{ secrets.DOCKER_USERNAME }}
-                password: ${{ secrets.DOCKER_PASSWORD }}
-          - name: github
-            image: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}
-            login:
-              uses: docker/login-action@v3
-              with:
-                registry: ghcr.io
-                username: ${{ secrets.REGISTRY_USER }}
-                password: ${{ secrets.PTA }}
     steps:
       - uses: actions/checkout@v6
 
-      - name: Log in to registry
-        uses: ${{ matrix.registry.login.uses }}
-        with: ${{ matrix.registry.login.with }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Push manifest
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.REGISTRY_USER }}
+          password: ${{ secrets.PTA }}
+
+      - name: push manifest to dockerhub
         run: |
-          docker buildx imagetools create \
-            -t ${{ matrix.registry.image }}:${{ env.DOCKERTAG }} \
-               ${{ matrix.registry.image }}:${{ env.DOCKERTAG }}-amd64 \
-               ${{ matrix.registry.image }}:${{ env.DOCKERTAG }}-arm64
+            docker manifest create consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }} \
+                                   consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-amd64 \
+                                   consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-arm64
+            docker manifest push consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}
+
+      - name: push manifest to github
+        run: |
+            docker manifest create ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }} \
+                                   ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-amd64 \
+                                   ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-arm64
+            docker manifest push ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}
