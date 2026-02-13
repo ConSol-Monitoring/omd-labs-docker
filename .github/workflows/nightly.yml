@@ -17,6 +17,8 @@ on:
 # set docker tag for all steps
 env:
   DOCKERTAG: nightly
+  DOCKER_BUILD_SUMMARY: 0
+  DOCKER_BUILD_RECORD_UPLOAD: 0
 
 jobs:
   docker_build:
@@ -57,9 +59,12 @@ jobs:
         with:
           push: true
           file: Dockerfile.omd-labs-${{ matrix.os }}
+          sbom: false
+          provenance: false
           build-args: |
             OMD_VERSION=${{ github.ref }}
             INSTALL_COMMON_RETRIES=3
+            BUILDKIT_MULTI_PLATFORM=0
           tags: |
             consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
             ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
