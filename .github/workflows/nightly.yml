@@ -74,14 +74,14 @@ jobs:
           - debian
         registry:
           - name: dockerhub
-            image: consol/omd-labs-${{ matrix.os }}
+            image: consol/omd-labs
             login:
               uses: docker/login-action@v3
               with:
                 username: ${{ secrets.DOCKER_USERNAME }}
                 password: ${{ secrets.DOCKER_PASSWORD }}
           - name: github
-            image: ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}
+            image: ghcr.io/consol/omd-labs-docker/omd-labs
             login:
               uses: docker/login-action@v3
               with:
@@ -98,6 +98,6 @@ jobs:
       - name: Push manifest
         run: |
           docker buildx imagetools create \
-            -t ${{ matrix.registry.image }}:${{ env.DOCKERTAG }} \
-               ${{ matrix.registry.image }}:${{ env.DOCKERTAG }}-amd64 \
-               ${{ matrix.registry.image }}:${{ env.DOCKERTAG }}-arm64
+            -t ${{ matrix.registry.image }}-${{ matrix.os }}:${{ env.DOCKERTAG }} \
+               ${{ matrix.registry.image }}-${{ matrix.os }}:${{ env.DOCKERTAG }}-amd64 \
+               ${{ matrix.registry.image }}-${{ matrix.os }}:${{ env.DOCKERTAG }}-arm64
