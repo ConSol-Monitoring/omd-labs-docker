@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.PTA }}
 
       - name: Build and Push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           push: true
           file: Dockerfile.omd-labs-${{ matrix.os }}
