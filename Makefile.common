@@ -1,0 +1,56 @@
+# This file is used to manage local images
+# depending of the current dir and branch.
+# Branch 'master' leads to no tag (=latest),
+# others to "local/[dirname]:[branchname]
+
+ifeq ($(strip $(DISTRO)),)
+    $(error DISTRO must not be empty, use Makefile.omd-labs-* instead)
+endif
+
+LOCAL_HTTPS_PORT ?= 8443
+
+# local builds will be named like this
+REPO = local/omd-labs-$(DISTRO)
+BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+# BRANCH=TAG, but "master"="nightly"
+TAG  = $(shell git rev-parse --abbrev-ref HEAD | sed 's/master/nightly/')
+# the final image name
+IMAGE=$(REPO):$(TAG)
+
+# will create another OMD site SITENAME, if set
+ifdef SITENAME
+	BUILDARGS = --build-arg SITENAME=$(SITENAME)
+else
+  SITENAME=demo
+endif
+
+export DOCKER_REPO=index.docker.io/consol/omd-labs-$(DISTRO)
+export IMAGE_NAME=$(IMAGE)
+export SOURCE_BRANCH=$(BRANCH)
+
+.PHONY: build bash start echo
+
+build:
+	# the hook is also executed on Docker Hub
+	./hooks/build $(BUILDARGS)
+	@echo "Successfully built" $(IMAGE)
+
+start:
+	docker run -p $(LOCAL_HTTPS_PORT):443 -d $(IMAGE)
+
+startvol:
+	mkdir -p site
+	docker run -d -p $(LOCAL_HTTPS_PORT):443             \
+	-v $(shell pwd)/site:/omd/sites/$(SITENAME) \
+	$(IMAGE)
+
+echo:
+	@echo $(IMAGE)
+
+bash:
+	docker run --rm -p $(LOCAL_HTTPS_PORT):443 -it $(IMAGE) /bin/bash
+
+bashvol:
+	docker run --rm -p $(LOCAL_HTTPS_PORT):443 -it \
+	-v $(shell pwd)/site:/omd/sites/$(SITENAME) \
+	$(IMAGE) /bin/bash
