@@ -174,3 +174,30 @@ If you want to see more verbose output from Ansible to debug your role, adjust t
 ```bash
 docker run -it -p 8443:443 -e ANSIBLE_VERBOSITY=3 -v $(pwd)/my_ansible_dropin:/root/ansible_dropin consol/omd-labs-debian
 ```
+
+### Release
+
+In order to do a release of the latest OMD version.
+
+Double check if the release is published in the [labs repo](https://labs.consol.de/repo/stable/rhel9/x86_64/) already.
+
+Create a branch (from current master) for this release and push it:
+
+```bash
+git branch v5.80
+git checkout v5.80
+git push --set-upstream origin v5.80
+```
+
+wait until the stable build is ready: [github actions](https://github.com/ConSol-Monitoring/omd-labs-docker/actions)
+
+Then merge master into `latest` branch and push that:
+
+```bash
+git checkout latest
+git merger master
+git push
+```
+
+in case the is no new commit, simply trigger the workflow [github latest action](https://github.com/ConSol-Monitoring/omd-labs-docker/actions/workflows/latest.yml) manually.
+
