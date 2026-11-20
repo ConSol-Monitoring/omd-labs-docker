@@ -54,7 +54,23 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.PTA }}
 
-      - name: Build and Push
+      - name: Build
+        uses: docker/build-push-action@v7
+        with:
+          push: false
+          file: Dockerfile.omd-labs-${{ matrix.os }}
+          sbom: false
+          provenance: false
+          build-args: |
+            OMD_VERSION=${{ github.ref }}
+            INSTALL_COMMON_RETRIES=3
+            BUILDKIT_MULTI_PLATFORM=0
+          tags: |
+            consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
+            ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
+          platforms: linux/${{ matrix.target.platform }}
+
+      - name: Push to Docker Hub
         uses: docker/build-push-action@v7
         with:
           push: true
@@ -67,6 +83,20 @@ jobs:
             BUILDKIT_MULTI_PLATFORM=0
           tags: |
             consol/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
+          platforms: linux/${{ matrix.target.platform }}
+
+      - name: Push to GitHub Docker Registry
+        uses: docker/build-push-action@v7
+        with:
+          push: true
+          file: Dockerfile.omd-labs-${{ matrix.os }}
+          sbom: false
+          provenance: false
+          build-args: |
+            OMD_VERSION=${{ github.ref }}
+            INSTALL_COMMON_RETRIES=3
+            BUILDKIT_MULTI_PLATFORM=0
+          tags: |
             ghcr.io/consol/omd-labs-docker/omd-labs-${{ matrix.os }}:${{ env.DOCKERTAG }}-${{ matrix.target.platform }}
           platforms: linux/${{ matrix.target.platform }}
 
